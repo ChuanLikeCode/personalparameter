@@ -56,9 +56,15 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case LIST_SUCCESS:
-                    bmobUtils.getUserInfo(userInfoList,list,2,handler);
+                    bmobUtils.getUserInfo(bmobUtils.healthCircleList,2,handler);
                     break;
                 case 2:
+//                    list.clear();
+//                    list.addAll(bmobUtils.healthCircleList);
+//                    praiseInfoList.clear();
+//                    praiseInfoList.addAll(bmobUtils.praiseInfoList);
+//                    userInfoList.clear();
+//                    userInfoList.addAll(bmobUtils.userInfoList);
                     setData();
                     break;
 
@@ -73,15 +79,15 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
      */
     private void setData() {
         //判断如果没有数据的话，则显示空提示
-        Log.e("list",list.size()+"");
-        if (list.size() == 0) {
+//        Log.e("list",list.size()+"");
+        if (bmobUtils.healthCircleList.size() == 0) {
             isRequestData = false;
             emptyView.setNotify("暂无动态");
         } else {
             isRequestData = true;
             emptyView.setEmptyViewGone();
         }
-        adapter.setList(list,praiseInfoList,userInfoList);
+        adapter.setList(bmobUtils.healthCircleList,bmobUtils.praiseInfoList,bmobUtils.userInfoList);
         adapter.notifyDataSetChanged();
         materialRefreshLayout.finishRefreshLoadMore();
         materialRefreshLayout.finishRefresh();

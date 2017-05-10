@@ -372,7 +372,7 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void updateHealCircle(HealthCircle healthCircle, final int resultCode, final Handler handler){
+    public void updateHealCircle(HealthCircle healthCircle, final int resultCode, int failedCode,final Handler handler){
         healthCircle.update(healthCircle.getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
@@ -386,7 +386,7 @@ public class BmobUtils {
         });
     }
 
-    public void savePraiseInfo(PraiseInfo praiseInfo,final int resultCode, final Handler handler){
+    public void savePraiseInfo(PraiseInfo praiseInfo,final int resultCode,int failedCode, final Handler handler){
         praiseInfo.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -400,7 +400,7 @@ public class BmobUtils {
         });
     }
 
-    public void deletePraiseInfo(PraiseInfo praiseInfo,final int resultCode, final Handler handler){
+    public void deletePraiseInfo(PraiseInfo praiseInfo,final int resultCode, int failedCode,final Handler handler){
         praiseInfo.delete(praiseInfo.getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
@@ -419,6 +419,7 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
+    public List<HealthCircle> healthCircleList = new ArrayList<>();
     public void queryFriendCircle( final int resultCode, final Handler handler){
 //        StringBuilder sql = new StringBuilder();
 //        sql.append("select h.*,u.name,u.head,");
@@ -433,8 +434,8 @@ public class BmobUtils {
                 if (e==null){
                     Log.e("queryFriendCircle","ok");
                     Collections.reverse(list);
-                    ((MainActivity)context).healthCircleFragment.list.clear();
-                    ((MainActivity)context).healthCircleFragment.list.addAll(list);
+                    healthCircleList.clear();
+                    healthCircleList.addAll(list);
                     getPraiseInfo(resultCode,handler);
                 }else {
                     Log.e("queryFriendCircle",e.getMessage());
@@ -448,6 +449,7 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
+    public List<PraiseInfo> praiseInfoList = new ArrayList<>();
     public void getPraiseInfo(final int resultCode, final Handler handler){
         BmobQuery<PraiseInfo> query = new BmobQuery<>();
         query.findObjects(new FindListener<PraiseInfo>() {
@@ -455,8 +457,8 @@ public class BmobUtils {
             public void done(List<PraiseInfo> list, BmobException e) {
                 if (e==null){
                     Log.e("getPraiseInfo","ok");
-                    ((MainActivity)context).healthCircleFragment.praiseInfoList.clear();
-                    ((MainActivity)context).healthCircleFragment.praiseInfoList.addAll(list);
+                    praiseInfoList.clear();
+                    praiseInfoList.addAll(list);
                     handler.sendEmptyMessage(resultCode);
                 }else {
                     Log.e("getPraiseInfo",e.getMessage());
@@ -472,7 +474,8 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void getUserInfo(final List<UserInfo> userInfoList, final List<HealthCircle> healthCircleList, final int resultCode, final Handler handler){
+    public List<UserInfo> userInfoList = new ArrayList<>();
+    public void getUserInfo(final List<HealthCircle> healthCircleList, final int resultCode, final Handler handler){
         userInfoList.clear();
         for (int i = 0;i<healthCircleList.size();i++){
             BmobQuery<UserInfo> query = new BmobQuery<>();

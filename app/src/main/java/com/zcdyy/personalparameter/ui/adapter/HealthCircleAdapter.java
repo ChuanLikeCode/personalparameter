@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zcdyy.personalparameter.R;
+import com.zcdyy.personalparameter.application.MyApplication;
 import com.zcdyy.personalparameter.bean.HealthCircle;
 import com.zcdyy.personalparameter.bean.PraiseInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
@@ -48,11 +49,12 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
     private List<String> userId = new ArrayList<>();
     private Map<Integer,Boolean> map = new HashMap<>();
     private BmobUtils bmobUtils;
-
+    private UserInfo userInfo;
 
     public HealthCircleAdapter(Context context, List<HealthCircle> list, List<UserInfo> userInfoList, List<PraiseInfo> praiseInfoList, int w){
         this.context = context;
         this.list = list;
+        userInfo = MyApplication.getInstance().readLoginUser();
         bmobUtils = new BmobUtils(context);
         this.praiseInfoList = praiseInfoList;
         this.userInfoList = userInfoList;
@@ -132,18 +134,29 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
             @Override
             public void onClick(View v) {
                 HealthCircle healthCircle = list.get(position);
-                PraiseInfo praiseInfo = new PraiseInfo();
+                PraiseInfo praiseInfo = null;
                 if (map.get(position)){//取消赞
+                    for (PraiseInfo p:praiseInfoList){
+                        if (p.getUser_id().equals(userInfo.getId())){
+                            praiseInfo = p;
+                            break;
+                        }
+                    }
                     healthCircle.setPraiseCount(healthCircle.getPraiseCount()-1);
                     holder.iv_zan.setImageResource(R.drawable.dp_dz_icon_03);
-                    bmobUtils.deletePraiseInfo(praiseInfo,1,handler);
+                    bmobUtils.deletePraiseInfo(praiseInfo,1,2,handler);
+                    map.put(position,false);
                 }else {
+                    praiseInfo = new PraiseInfo();
+                    praiseInfo.setUser_id(userInfo.getId());
+                    praiseInfo.setNews_id(list.get(position).getObjectId());
                     healthCircle.setPraiseCount(healthCircle.getPraiseCount()+1);
                     holder.iv_zan.setImageResource(R.mipmap.dz);
-                    bmobUtils.deletePraiseInfo(praiseInfo,1,handler);
+                    bmobUtils.savePraiseInfo(praiseInfo,1,2,handler);
+                    map.put(position,true);
                 }
                 holder.zanCount.setText(""+healthCircle.getPraiseCount()+"");
-                bmobUtils.updateHealCircle(healthCircle,123,handler);
+                bmobUtils.updateHealCircle(healthCircle,123,2,handler);
             }
         });
     }
@@ -155,8 +168,8 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
                 case 123:
                     ToastUtils.shortToast(context,"操作成功");
                     break;
-                case 1:
-//                    ToastUtils.shortToast("");
+                case 2:
+                    ToastUtils.shortToast(context,"网络错误，请稍后重试");
                     break;
             }
         }
