@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:attr="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/colorWhite"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/dialog_background">
+
+        <TextView
+            android:id="@+id/wheelpicker_tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/wheelpicker_cancel"
+            android:textColor="@color/colorBlue"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/wheelpicker_tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="@string/wheelpicker_confirm"
+            android:textColor="@color/colorBlue"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <com.zcdyy.personalparameter.views.WheelPicker
+        android:id="@+id/wheelpicker_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        attr:wheel_atmospheric="true"
+        attr:wheel_curved="true"
+        attr:wheel_cyclic="false"
+        attr:wheel_item_text_color="@color/wheelpicker_text_color"
+        attr:wheel_selected_item_text_color="@color/wheelpicker_text_selectedcolor"></com.zcdyy.personalparameter.views.WheelPicker>
+
+
+</LinearLayout>

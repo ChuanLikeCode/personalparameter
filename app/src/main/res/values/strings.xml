@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">人体检测</string>
+
+    <!--权限设置-->
+    <string name="permission">权限(permission)</string>
+    <string name="no_permissions">应用需要必要的运行权限</string>
+    <string name="settings">设置</string>
+    <string name="help">帮助</string>
+    <string name="string_help_text">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。\n\n最后点击两次后退按钮，即可返回。</string>
+    <string name="quit">退出</string>
+
+    <string name="sex">性别</string>
+    <string name="age">年龄</string>
+    <string name="birth">生日</string>
+    <string name="xingzuo">星座</string>
+    <string name="company">公司</string>
+    <string name="school">学校</string>
+    <string name="guxiang">故乡</string>
+    <string name="email">邮箱</string>
+    <string name="wheelpicker_cancel">取消</string>
+    <string name="wheelpicker_confirm">确定</string>
+
+    <string name="revisePassword">修改密码</string>
+    <string name="revisePrePassword">请输入原密码</string>
+    <string name="reviseNewPassword">请输入新密码</string>
+    <string name="reviseConfirmPassword">请再次确认新密码</string>
+
+</resources>

@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_edit_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+  >
+
+    <include layout="@layout/actionbar_top"/>
+    <RelativeLayout
+        android:id="@+id/rl_head"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+
+        <TextView
+            android:id="@+id/edit_myinfo_tv_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="头像"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <com.zcdyy.personalparameter.views.CircleImageView
+            android:id="@+id/edit_myinfo_civ_head"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/chat_xe_icon2_03" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_nikeName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="名字"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_name"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入名字"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_sex"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/sex"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_sex"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入性别"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_phone"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/birth"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_birth"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入生日"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_age"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/age"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_age"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入年龄"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+
+    <include layout="@layout/divide_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_height"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/xingzuo"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_xingzuo"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入星座"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+
+    <include layout="@layout/divide_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_weight"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/company"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_company"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入公司"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+
+    <include layout="@layout/divide_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/school"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_school"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入学校"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="故乡"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_hometown"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入故乡"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/email"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_myinfo_et_email"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:hint="请输入邮箱"
+            android:textColorHint="@color/colorGray"
+            android:gravity="end"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line" />
+
+    <TextView
+        android:id="@+id/exit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/login_shape"
+        android:layout_marginLeft="50dp"
+        android:text="退出登录"
+        android:textSize="@dimen/title"
+        android:textColor="@color/colorWhite"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="15dp"/>
+</LinearLayout>
