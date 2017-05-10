@@ -12,31 +12,27 @@ import cn.bmob.v3.datatype.BmobFile;
 
 public class HealthCircle extends BmobObject implements Serializable{
     private String id;//用户id
-    private String objectId;//动态Id
+//    private String objectId;//动态Id
     private String content;//内容
     private BmobFile img;//图片
     private boolean isPic;//是否有图片
+    private int commentCount;
+    private int praiseCount;
 
-
-
-
-    private BmobFile head;//头像
-    private String name;//名字
-
-    public BmobFile getHead() {
-        return head;
+    public int getCommentCount() {
+        return commentCount;
     }
 
-    public void setHead(BmobFile head) {
-        this.head = head;
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
-    public String getName() {
-        return name;
+    public int getPraiseCount() {
+        return praiseCount;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPraiseCount(int praiseCount) {
+        this.praiseCount = praiseCount;
     }
 
     public boolean isPic() {

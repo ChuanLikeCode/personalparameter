@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -111,6 +112,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         userPassword = password.getText().toString();
         account.setAccount(userPhone);
         account.setPassword(userPassword);
+        Log.e("checkAccount","checkAccount");
         if (userPhone.equals("") || userPassword.equals("")) {
             Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_LONG).show();
         } else {

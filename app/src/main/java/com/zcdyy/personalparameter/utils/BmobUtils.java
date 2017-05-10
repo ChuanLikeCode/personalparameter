@@ -8,7 +8,9 @@ import android.util.Log;
 
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.application.MyApplication;
+import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.HealthCircle;
+import com.zcdyy.personalparameter.bean.PraiseInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.constant.Constants;
 import com.zcdyy.personalparameter.ui.activity.EditMyInfoActivity;
@@ -48,6 +50,27 @@ public class BmobUtils {
     private UserInfo userInfo;
     public BmobUtils(Context context){
         this.context = context;
+    }
+
+    /**
+     * 保存评论
+     * @param commentInfo
+     * @param resultCode
+     * @param handler
+     */
+    public void saveCommentInfo(CommentInfo commentInfo, final int resultCode, final Handler handler){
+        commentInfo.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null) {
+                    Log.e("saveCommentInfo", "ok");
+                    handler.sendEmptyMessage(resultCode);
+                } else {
+
+                    Log.e("saveCommentInfo", "failed");
+                }
+            }
+        });
     }
 
     /**
@@ -329,7 +352,7 @@ public class BmobUtils {
      * @param healthCircle
      */
     public void publishFriendCircle(HealthCircle healthCircle){
-        Log.e("publishFriendCircle","publishFriendCircle");
+//        Log.e("publishFriendCircle","publishFriendCircle");
         healthCircle.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -341,7 +364,54 @@ public class BmobUtils {
                 }
             }
         });
+    }
 
+    /**
+     * 点赞或者评论之后的更新数据
+     * @param healthCircle
+     * @param resultCode
+     * @param handler
+     */
+    public void updateHealCircle(HealthCircle healthCircle, final int resultCode, final Handler handler){
+        healthCircle.update(healthCircle.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e==null){
+                    Log.e("updateHealCircle","ok");
+                    handler.sendEmptyMessage(resultCode);
+                }else {
+                    Log.e("updateHealCircle",e.getMessage());
+                }
+            }
+        });
+    }
+
+    public void savePraiseInfo(PraiseInfo praiseInfo,final int resultCode, final Handler handler){
+        praiseInfo.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e==null){
+                    Log.e("savePraiseInfo","ok");
+                    handler.sendEmptyMessage(resultCode);
+                }else {
+                    Log.e("savePraiseInfo",e.getMessage());
+                }
+            }
+        });
+    }
+
+    public void deletePraiseInfo(PraiseInfo praiseInfo,final int resultCode, final Handler handler){
+        praiseInfo.delete(praiseInfo.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e==null){
+                    Log.e("deletePraiseInfo","ok");
+                    handler.sendEmptyMessage(resultCode);
+                }else {
+                    Log.e("deletePraiseInfo",e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -349,18 +419,13 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void queryFriendCircle(final int resultCode, final Handler handler){
+    public void queryFriendCircle( final int resultCode, final Handler handler){
 //        StringBuilder sql = new StringBuilder();
 //        sql.append("select h.*,u.name,u.head,");
 //        sql.append("(select count(1) from prise p on p.user_id=").append(userId);
 //        sql.append("and p.news_id=h.object_id ) as hasPraise ");
 //        sql.append("from HealthCircle h left join UserInfo u1 on u1.object_id=h.user_id ");
 //        sql.append(" order by createdAt desc");
-
-
-
-
-
         BmobQuery<HealthCircle> query = new BmobQuery<>();
         query.findObjects(new FindListener<HealthCircle>() {
             @Override
@@ -370,7 +435,7 @@ public class BmobUtils {
                     Collections.reverse(list);
                     ((MainActivity)context).healthCircleFragment.list.clear();
                     ((MainActivity)context).healthCircleFragment.list.addAll(list);
-                    handler.sendEmptyMessage(resultCode);
+                    getPraiseInfo(resultCode,handler);
                 }else {
                     Log.e("queryFriendCircle",e.getMessage());
                 }
@@ -378,8 +443,113 @@ public class BmobUtils {
         });
     }
 
+    /**
+     * 获取点赞
+     * @param resultCode
+     * @param handler
+     */
+    public void getPraiseInfo(final int resultCode, final Handler handler){
+        BmobQuery<PraiseInfo> query = new BmobQuery<>();
+        query.findObjects(new FindListener<PraiseInfo>() {
+            @Override
+            public void done(List<PraiseInfo> list, BmobException e) {
+                if (e==null){
+                    Log.e("getPraiseInfo","ok");
+                    ((MainActivity)context).healthCircleFragment.praiseInfoList.clear();
+                    ((MainActivity)context).healthCircleFragment.praiseInfoList.addAll(list);
+                    handler.sendEmptyMessage(resultCode);
+                }else {
+                    Log.e("getPraiseInfo",e.getMessage());
+                }
+            }
+        });
+    }
 
+    /**
+     * 获取发布动态的用户的头像名字
+     * @param userInfoList
+     * @param healthCircleList
+     * @param resultCode
+     * @param handler
+     */
+    public void getUserInfo(final List<UserInfo> userInfoList, final List<HealthCircle> healthCircleList, final int resultCode, final Handler handler){
+        userInfoList.clear();
+        for (int i = 0;i<healthCircleList.size();i++){
+            BmobQuery<UserInfo> query = new BmobQuery<>();
+            query.addWhereEqualTo("id",healthCircleList.get(i).getId());
+            final int finalI = i;
+            query.findObjects(new FindListener<UserInfo>() {
+                @Override
+                public void done(List<UserInfo> list, BmobException e) {
+                    if (e==null){
+                        Log.e("getUserInfo","ok");
+                        userInfoList.addAll(list);
+                        if (finalI == healthCircleList.size()-1){
+                            handler.sendEmptyMessage(resultCode);
+                        }
 
+                    }else {
+                        Log.e("getUserInfo",e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 获取文章的评论
+     * @param news_id  文章的ID
+     * @param resultCode
+     * @param handler
+     */
+    public void getCommnetInfo(String news_id,final int resultCode, final Handler handler){
+        BmobQuery<CommentInfo> query = new BmobQuery<>();
+        query.addWhereEqualTo("news_id",news_id);
+        query.findObjects(new FindListener<CommentInfo>() {
+            @Override
+            public void done(List<CommentInfo> list, BmobException e) {
+                if (e==null){
+                    Log.e("getCommnetInfo","ok");
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    Collections.reverse(list);
+                    bundle.putSerializable("comment", (Serializable) list);
+                    message.what = resultCode;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else {
+                    Log.e("getCommnetInfo",e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取文章点赞
+     * @param resultCode
+     * @param handler
+     */
+    public void getPraiseInfo(String news_id,final int resultCode, final Handler handler){
+        BmobQuery<PraiseInfo> query = new BmobQuery<>();
+        query.addWhereEqualTo("news_id",news_id);
+        query.findObjects(new FindListener<PraiseInfo>() {
+            @Override
+            public void done(List<PraiseInfo> list, BmobException e) {
+                if (e==null){
+                    Log.e("getPraiseInfo","ok");
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    Collections.reverse(list);
+                    bundle.putSerializable("praise", (Serializable) list);
+                    message.what = resultCode;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else {
+                    Log.e("getPraiseInfo",e.getMessage());
+                }
+            }
+        });
+    }
 
     /**
      * 查询动态--个人

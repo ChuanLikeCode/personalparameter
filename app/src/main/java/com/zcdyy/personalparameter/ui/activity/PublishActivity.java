@@ -117,18 +117,18 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         if (!content.getText().toString().equals("")){
             dialog = ProgressDialog.show(this,null,"正在发布......");
             healthCircle.setId(loginuser.getId());
-            healthCircle.setHead(loginuser.getHead());
-            healthCircle.setName(loginuser.getName());
             healthCircle.setContent(content.getText().toString());
             healthCircle.setPic(isPic);
-            Log.e("publishFriend","publishFriend");
+            healthCircle.setCommentCount(0);
+            healthCircle.setPraiseCount(0);
+//            Log.e("publishFriend","publishFriend");
             bmobUtils.publishFriendCircle(healthCircle);
         }else {
             ToastUtils.shortToast(this,"内容不能为空");
         }
     }
 
-    //    //头像选择对话框
+        //头像选择对话框
     private void showActionSheetDialog(String[] items) {
         ActionSheet actionSheet = new ActionSheet(this)
                 .builder()

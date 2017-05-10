@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop="15dp"
+    android:paddingLeft="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite">
+
+    <com.zcdyy.personalparameter.views.CircleImageView
+        android:id="@+id/sellerStateDetail_comment_civ_head"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@color/colorBlack"/>
+    <TextView
+        android:id="@+id/sellerStateDetail_comment_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="14sp"
+        android:text="绿水青山"
+        android:layout_toRightOf="@id/sellerStateDetail_comment_civ_head"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"/>
+    <TextView
+        android:id="@+id/sellerStateDetail_comment_tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorGray"
+        android:textSize="@dimen/smallSize"
+        android:text="35秒前"
+        android:layout_below="@id/sellerStateDetail_comment_tv_name"
+        android:layout_marginTop="5dp"
+        android:layout_alignLeft="@id/sellerStateDetail_comment_tv_name"/>
+
+    <TextView
+        android:id="@+id/sellerStateDetail_comment_tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="14sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_below="@id/sellerStateDetail_comment_tv_date"
+        android:layout_alignLeft="@id/sellerStateDetail_comment_tv_name"
+        android:text="这是评论，这是评论，这是评论，这是评论，"/>
+
+    <TextView
+        android:id="@+id/sellerStateDetail_comment_tv_replayContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_below="@id/sellerStateDetail_comment_tv_date"
+        android:layout_alignLeft="@id/sellerStateDetail_comment_tv_name"
+        android:text="这是评论，这是评论，这是评论，这是评论，"/>
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/sellerStateDetail_comment_tv_name"
+        android:layout_below="@id/sellerStateDetail_comment_tv_content"
+        android:layout_marginTop="15dp"
+        layout="@layout/divide_line"/>
+</RelativeLayout>

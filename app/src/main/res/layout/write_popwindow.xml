@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite">
+    <RelativeLayout
+        android:id="@+id/detail_bottom1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorWindows">
+
+        <include layout="@layout/divide_line"/>
+        <ImageView
+            android:id="@+id/iv_dianzan1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/dp_dz_icon_03"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"/>
+
+        <EditText
+            android:id="@+id/xiepinglun1"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/iv_dianzan1"
+            android:layout_marginRight="15dp"
+            android:singleLine="true"
+            android:imeOptions="actionSend"
+            android:background="@drawable/seller_state_comment_shape"
+            android:layout_marginLeft="15dp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/content"
+            android:textColorHint="@color/colorGray"
+            android:hint="写评论..."/>
+
+    </RelativeLayout>
+</LinearLayout>

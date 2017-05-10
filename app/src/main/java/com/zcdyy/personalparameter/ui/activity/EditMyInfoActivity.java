@@ -100,7 +100,7 @@ public class EditMyInfoActivity extends BaseActivity implements ActionSheet.OnSh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (loginuser.isNewInfo()) {
+        if (!loginuser.isNewInfo()) {
             startActivity(MainActivity.class);
             finish();
         }

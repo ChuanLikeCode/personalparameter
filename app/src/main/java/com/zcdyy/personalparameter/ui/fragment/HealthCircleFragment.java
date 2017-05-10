@@ -1,6 +1,7 @@
 package com.zcdyy.personalparameter.ui.fragment;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -16,11 +17,15 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseFragment;
+import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.HealthCircle;
+import com.zcdyy.personalparameter.bean.PraiseInfo;
+import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.ui.activity.PublishActivity;
 import com.zcdyy.personalparameter.ui.adapter.HealthCircleAdapter;
 import com.zcdyy.personalparameter.utils.BmobUtils;
 import com.zcdyy.personalparameter.utils.DividerItemDecoration;
+import com.zcdyy.personalparameter.utils.ToastUtils;
 import com.zcdyy.personalparameter.utils.Utils;
 import com.zcdyy.personalparameter.views.EmptyView;
 
@@ -36,6 +41,8 @@ import java.util.List;
 public class HealthCircleFragment extends BaseFragment implements View.OnClickListener {
     private final int LIST_SUCCESS = 1;
     public List<HealthCircle> list = new ArrayList<>();
+    public List<PraiseInfo> praiseInfoList = new ArrayList<>();
+    public List<UserInfo> userInfoList = new ArrayList<>();
     private View view;
     private TextView title,publish;
     private BmobUtils bmobUtils;
@@ -49,25 +56,36 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case LIST_SUCCESS:
-                    //判断如果没有数据的话，则显示空提示
-                    Log.e("list",list.size()+"");
-                    if (list.size() == 0) {
-                        isRequestData = false;
-                        emptyView.setNotify("暂无动态");
-                    } else {
-                        isRequestData = true;
-                        emptyView.setEmptyViewGone();
-                    }
-                    adapter.setList(list);
-                    adapter.notifyDataSetChanged();
-                    materialRefreshLayout.finishRefreshLoadMore();
-                    materialRefreshLayout.finishRefresh();
+                    bmobUtils.getUserInfo(userInfoList,list,2,handler);
                     break;
+                case 2:
+                    setData();
+                    break;
+
             }
         }
 
 
     };
+
+    /**
+     * 添加数据
+     */
+    private void setData() {
+        //判断如果没有数据的话，则显示空提示
+        Log.e("list",list.size()+"");
+        if (list.size() == 0) {
+            isRequestData = false;
+            emptyView.setNotify("暂无动态");
+        } else {
+            isRequestData = true;
+            emptyView.setEmptyViewGone();
+        }
+        adapter.setList(list,praiseInfoList,userInfoList);
+        adapter.notifyDataSetChanged();
+        materialRefreshLayout.finishRefreshLoadMore();
+        materialRefreshLayout.finishRefresh();
+    }
 
     @Override
     protected View onCreateViews(LayoutInflater inflater, ViewGroup container) {
@@ -82,14 +100,22 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         publish.setText("发布");
         title.setText("健康资讯");
         bmobUtils = new BmobUtils(getActivity());
-        bmobUtils.queryFriendCircle(LIST_SUCCESS,handler);
+//        dialog = ProgressDialog.show(getActivity(),null,"加载数据.....");
+
         publish.setVisibility(View.VISIBLE);
-        adapter = new HealthCircleAdapter(getActivity(), list, getVmWidth());
+        adapter = new HealthCircleAdapter(getActivity(), list,userInfoList,praiseInfoList, getVmWidth());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecoration decoration = new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST);
         decoration.setDivider(R.drawable.divider_shape);
         recyclerView.addItemDecoration(decoration);
         recyclerView.setAdapter(adapter);
+        bmobUtils.queryFriendCircle(LIST_SUCCESS,handler);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        bmobUtils.queryFriendCircle(LIST_SUCCESS,handler);
     }
 
     private void bind() {
@@ -108,6 +134,7 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
                     public void run() {
                         // TODO Auto-generated method stub
                         materialRefreshLayout.finishRefreshLoadMore();
+//                        materialRefreshLayout.finishRefresh();
                     }
                 }, 1000);
             }
