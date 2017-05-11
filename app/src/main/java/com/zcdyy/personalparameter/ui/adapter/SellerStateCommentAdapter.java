@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zcdyy.personalparameter.R;
+import com.zcdyy.personalparameter.bean.Comment;
 import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.listener.OnItemClickListener;
@@ -27,19 +28,16 @@ public class SellerStateCommentAdapter extends RecyclerView.Adapter<SellerStateC
     private Context context;
     private OnItemClickListener onItemClickListener;
     private UserInfo userInfo;
-    private List<CommentInfo> list;
-    private List<UserInfo> userInfoList;
-    private List<UserInfo> replyUserInfo;
-    public SellerStateCommentAdapter(Context context,List<CommentInfo> list,List<UserInfo> userInfoList,List<UserInfo> replyUserInfo){
+    private List<Comment> list;
+
+    public SellerStateCommentAdapter(Context context,List<Comment> list){
         this.context = context;
         this.list = list;
-        this.userInfoList = userInfoList;
-        this.replyUserInfo = replyUserInfo;
+
     }
-    public void addList(List<CommentInfo> list,List<UserInfo> userInfoList,List<UserInfo> replyUserInfo) {
+    public void addList(List<Comment> list) {
         this.list = list;
-        this.userInfoList = userInfoList;
-        this.replyUserInfo = replyUserInfo;
+
 //        notifyDataSetChanged();
     }
 
@@ -56,29 +54,16 @@ public class SellerStateCommentAdapter extends RecyclerView.Adapter<SellerStateC
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Glide.with(context).load(userInfoList.get(position).getHead().getFileUrl()).into(holder.head);
-        holder.name.setText(userInfoList.get(position).getName());
-        holder.timeStr.setText(list.get(position).getCreatedAt());
-        if (!list.get(position).is_reply()){
+        Glide.with(context).load(list.get(position).getHead().getFileUrl()).into(holder.head);
+        holder.name.setText(list.get(position).getName());
+        holder.timeStr.setText(list.get(position).getTimeStr());
+        if (!list.get(position).isReply()){
             holder.content.setText(list.get(position).getContent());
         }else {
-            for (UserInfo u:replyUserInfo){
-                if (u.getId().equals(list.get(position).getReply_id())){
-                    holder.content.setText(
-                            Html.fromHtml("回复 "+"<html><font color=\"#ff5001\">"+
-                                    u.getName()+":</font></html>" +list.get(position).getContent()));
-                    break;
-                }
-            }
+            holder.content.setText(
+                    Html.fromHtml("回复 "+"<html><font color=\"#ff5001\">"+
+                            list.get(position).getReplyName()+":</font></html>" +list.get(position).getContent()));
         }
-
-//        if (list.get(position).getReplyUserName()==null){
-//            holder.content.setText(list.get(position).getContent());
-//        }else {
-//            holder.content.setText(
-//                    Html.fromHtml("回复 "+"<html><font color=\"#ff5001\">"+
-//                            list.get(position).getReplyUserName()+":</font></html>" +list.get(position).getContent()));
-//        }
     }
 
     @Override

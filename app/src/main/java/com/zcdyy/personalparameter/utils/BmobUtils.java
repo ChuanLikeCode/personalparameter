@@ -15,7 +15,6 @@ import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.constant.Constants;
 import com.zcdyy.personalparameter.ui.activity.EditMyInfoActivity;
 import com.zcdyy.personalparameter.ui.activity.LoginActivity;
-import com.zcdyy.personalparameter.ui.activity.MainActivity;
 import com.zcdyy.personalparameter.ui.activity.PublishActivity;
 import com.zcdyy.personalparameter.ui.activity.RegisterActivity;
 import com.zcdyy.personalparameter.ui.activity.SettingActivity;
@@ -51,6 +50,11 @@ public class BmobUtils {
     public BmobUtils(Context context){
         this.context = context;
     }
+    private DataUtils dataUtils;
+
+    public void setDataUtils(DataUtils dataUtils) {
+        this.dataUtils = dataUtils;
+    }
 
     /**
      * 保存评论
@@ -66,7 +70,6 @@ public class BmobUtils {
                     Log.e("saveCommentInfo", "ok");
                     handler.sendEmptyMessage(resultCode);
                 } else {
-
                     Log.e("saveCommentInfo", "failed");
                 }
             }
@@ -419,7 +422,6 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public List<HealthCircle> healthCircleList = new ArrayList<>();
     public void queryFriendCircle( final int resultCode, final Handler handler){
 //        StringBuilder sql = new StringBuilder();
 //        sql.append("select h.*,u.name,u.head,");
@@ -434,8 +436,9 @@ public class BmobUtils {
                 if (e==null){
                     Log.e("queryFriendCircle","ok");
                     Collections.reverse(list);
-                    healthCircleList.clear();
-                    healthCircleList.addAll(list);
+                    dataUtils.healthCircleList.clear();
+                    dataUtils.healthCircleList.addAll(list);
+                    Log.e("queryFriendCircle",dataUtils.healthCircleList.size()+"");
                     getPraiseInfo(resultCode,handler);
                 }else {
                     Log.e("queryFriendCircle",e.getMessage());
@@ -446,10 +449,7 @@ public class BmobUtils {
 
     /**
      * 获取点赞
-     * @param resultCode
-     * @param handler
      */
-    public List<PraiseInfo> praiseInfoList = new ArrayList<>();
     public void getPraiseInfo(final int resultCode, final Handler handler){
         BmobQuery<PraiseInfo> query = new BmobQuery<>();
         query.findObjects(new FindListener<PraiseInfo>() {
@@ -457,8 +457,8 @@ public class BmobUtils {
             public void done(List<PraiseInfo> list, BmobException e) {
                 if (e==null){
                     Log.e("getPraiseInfo","ok");
-                    praiseInfoList.clear();
-                    praiseInfoList.addAll(list);
+                    dataUtils.praiseInfoList.clear();
+                    dataUtils.praiseInfoList.addAll(list);
                     handler.sendEmptyMessage(resultCode);
                 }else {
                     Log.e("getPraiseInfo",e.getMessage());
@@ -468,31 +468,129 @@ public class BmobUtils {
     }
 
     /**
+     * 获取文章详情
+     */
+    public void getHealthCircle(final String objectId, final String userId, final int resultCode, final Handler handler){
+        BmobQuery<HealthCircle> query = new BmobQuery<>();
+        query.addWhereEqualTo("objectId",objectId);
+        query.findObjects(new FindListener<HealthCircle>() {
+            @Override
+            public void done(List<HealthCircle> list, BmobException e) {
+                if (e==null){
+                    Log.e("getHealthCircle","ok");
+                    dataUtils.healthCircleList.clear();
+                    dataUtils.healthCircleList.addAll(list);
+                    getPraiseInfo(objectId,userId,resultCode,handler);
+                }else {
+                    Log.e("getHealthCircle",e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
      * 获取发布动态的用户的头像名字
-     * @param userInfoList
      * @param healthCircleList
      * @param resultCode
      * @param handler
      */
-    public List<UserInfo> userInfoList = new ArrayList<>();
     public void getUserInfo(final List<HealthCircle> healthCircleList, final int resultCode, final Handler handler){
-        userInfoList.clear();
+        dataUtils.articleUserList.clear();
         for (int i = 0;i<healthCircleList.size();i++){
+//            Log.e("getUserInfo",i+"");
             BmobQuery<UserInfo> query = new BmobQuery<>();
             query.addWhereEqualTo("id",healthCircleList.get(i).getId());
-            final int finalI = i;
             query.findObjects(new FindListener<UserInfo>() {
                 @Override
                 public void done(List<UserInfo> list, BmobException e) {
                     if (e==null){
                         Log.e("getUserInfo","ok");
-                        userInfoList.addAll(list);
-                        if (finalI == healthCircleList.size()-1){
+                        dataUtils.articleUserList.addAll(list);
+                        if (dataUtils.articleUserList.size() == healthCircleList.size()){
                             handler.sendEmptyMessage(resultCode);
                         }
 
                     }else {
                         Log.e("getUserInfo",e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+
+
+    /**
+     * 获取用户此文章是否点赞
+     * @param resultCode
+     * @param handler
+     */
+    public static boolean hasPraise = false;
+    public void getPraiseInfo(String news_id,String user_id,final int resultCode, final Handler handler){
+        BmobQuery<PraiseInfo> query = new BmobQuery<>();
+        query.addWhereEqualTo("news_id",news_id);
+        query.addWhereEqualTo("user_id",user_id);
+        query.findObjects(new FindListener<PraiseInfo>() {
+            @Override
+            public void done(List<PraiseInfo> list, BmobException e) {
+                if (e==null){
+                    Log.e("getPraiseInfo","ok");
+                    if (list.size()!=0){
+                        hasPraise = true;
+                    }
+                    handler.sendEmptyMessage(resultCode);
+                }else {
+                    Log.e("getPraiseInfo",e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取文章点赞
+     * @param resultCode
+     * @param handler
+     */
+    public void getPraiseInfo(String news_id,final int resultCode, final Handler handler){
+        BmobQuery<PraiseInfo> query = new BmobQuery<>();
+        query.addWhereEqualTo("news_id",news_id);
+        query.findObjects(new FindListener<PraiseInfo>() {
+            @Override
+            public void done(List<PraiseInfo> list, BmobException e) {
+                if (e==null){
+                    Log.e("getPraiseInfo","ok");
+                    dataUtils.praiseInfoList.clear();
+                    dataUtils.praiseInfoList.addAll(list);
+                    handler.sendEmptyMessage(resultCode);
+                }else {
+                    Log.e("getPraiseInfo",e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取点赞的用户的信息
+     * @param praiseInfoList
+     * @param resultCode
+     * @param handler
+     */
+    public void getPraiseUserInfo(final List<PraiseInfo> praiseInfoList, final int resultCode, final Handler handler){
+        dataUtils.praiseUserInfo.clear();
+        for (int i = 0;i<praiseInfoList.size();i++){
+            BmobQuery<UserInfo> query = new BmobQuery<>();
+            query.addWhereEqualTo("objectId",praiseInfoList.get(i).getUser_id());
+            query.findObjects(new FindListener<UserInfo>() {
+                @Override
+                public void done(List<UserInfo> list, BmobException e) {
+                    if (e==null){
+                        Log.e("getPraiseUserInfo","ok");
+                        dataUtils.praiseUserInfo.addAll(list);
+                        if (dataUtils.praiseUserInfo.size() == praiseInfoList.size()){
+                            handler.sendEmptyMessage(resultCode);
+                        }
+                    }else {
+                        Log.e("getPraiseUserInfo",e.getMessage());
                     }
                 }
             });
@@ -513,13 +611,9 @@ public class BmobUtils {
             public void done(List<CommentInfo> list, BmobException e) {
                 if (e==null){
                     Log.e("getCommnetInfo","ok");
-                    Message message = new Message();
-                    Bundle bundle = new Bundle();
-                    Collections.reverse(list);
-                    bundle.putSerializable("comment", (Serializable) list);
-                    message.what = resultCode;
-                    message.setData(bundle);
-                    handler.sendMessage(message);
+                    dataUtils.commentInfoList.clear();
+                    dataUtils.commentInfoList.addAll(list);
+                    handler.sendEmptyMessage(resultCode);
                 }else {
                     Log.e("getCommnetInfo",e.getMessage());
                 }
@@ -528,32 +622,75 @@ public class BmobUtils {
     }
 
     /**
-     * 获取文章点赞
+     * 获取评论的用户信息
+     * @param commentInfoList
      * @param resultCode
      * @param handler
      */
-    public void getPraiseInfo(String news_id,final int resultCode, final Handler handler){
-        BmobQuery<PraiseInfo> query = new BmobQuery<>();
-        query.addWhereEqualTo("news_id",news_id);
-        query.findObjects(new FindListener<PraiseInfo>() {
-            @Override
-            public void done(List<PraiseInfo> list, BmobException e) {
-                if (e==null){
-                    Log.e("getPraiseInfo","ok");
-                    Message message = new Message();
-                    Bundle bundle = new Bundle();
-                    Collections.reverse(list);
-                    bundle.putSerializable("praise", (Serializable) list);
-                    message.what = resultCode;
-                    message.setData(bundle);
-                    handler.sendMessage(message);
-                }else {
-                    Log.e("getPraiseInfo",e.getMessage());
+    public void getCommentUserInfo(final List<CommentInfo> commentInfoList, final int resultCode, final Handler handler){
+        dataUtils.commentUserInfo.clear();
+        for (int i = 0;i<commentInfoList.size();i++){
+            BmobQuery<UserInfo> query = new BmobQuery<>();
+            query.addWhereEqualTo("objectId",commentInfoList.get(i).getUser_id());
+            query.findObjects(new FindListener<UserInfo>() {
+                @Override
+                public void done(List<UserInfo> list, BmobException e) {
+                    if (e==null){
+                        Log.e("getCommentUserInfo","ok");
+                        dataUtils.commentUserInfo.addAll(list);
+                        if (dataUtils.commentUserInfo.size()==commentInfoList.size()){
+                            handler.sendEmptyMessage(resultCode);
+                        }
+                    }else {
+                        Log.e("getCommentUserInfo",e.getMessage());
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
+    /**
+     * 获取评论里面回复的人的信息
+     * @param commentInfoList
+     * @param resultCode
+     * @param handler
+     */
+    public void getCommentReplyUserInfo(List<CommentInfo> commentInfoList,final int resultCode, final Handler handler){
+        dataUtils.replyUserInfo.clear();
+        int count = 0;
+        for (CommentInfo c:commentInfoList){
+            if (c.is_reply()){
+                count++;
+            }
+        }
+        if (count==0){
+            handler.sendEmptyMessage(resultCode);
+            return;
+        }
+        final int finalCount = count;
+        for (int i = 0;i<commentInfoList.size();i++){
+            if (commentInfoList.get(i).is_reply()){
+                BmobQuery<UserInfo> query = new BmobQuery<>();
+                query.addWhereEqualTo("objectId",commentInfoList.get(i).getReply_id());
+                query.findObjects(new FindListener<UserInfo>() {
+                    @Override
+                    public void done(List<UserInfo> list, BmobException e) {
+                        if (e==null){
+                            Log.e("getCommentReplyUserInfo","ok");
+                            dataUtils.commentUserInfo.addAll(list);
+                            if (dataUtils.commentUserInfo.size()== finalCount){
+                                handler.sendEmptyMessage(resultCode);
+                            }
+                        }else {
+                            Log.e("getCommentReplyUserInfo",e.getMessage());
+                        }
+                    }
+                });
+            }
+
+        }
+
+    }
     /**
      * 查询动态--个人
      * @param resultCode

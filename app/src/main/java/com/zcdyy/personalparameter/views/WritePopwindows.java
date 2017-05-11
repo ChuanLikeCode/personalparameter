@@ -20,6 +20,7 @@ import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.application.MyApplication;
 import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
+import com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity;
 import com.zcdyy.personalparameter.utils.BmobUtils;
 import com.zcdyy.personalparameter.utils.StringUtils;
 import com.zcdyy.personalparameter.utils.ToastUtils;
@@ -32,13 +33,13 @@ import com.zcdyy.personalparameter.utils.Utils;
 public class WritePopwindows extends PopupWindow{
     public View view;
     private Context context;
-    private ImageView dianzan1;
+    public ImageView dianzan1;
     public EditText comment1;
     private boolean isParise = false;
     private boolean commnetOrReplay = true;//true表示评论
     private String id;
     private String replayID;
-    private String userName;
+    private String replyName;
     private UserInfo loginuser;
     private Handler handler;
     private BmobUtils bmobUtils;
@@ -46,8 +47,20 @@ public class WritePopwindows extends PopupWindow{
         this.handler = handler;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setReplyName(String replyName) {
+        this.replyName = replyName;
+    }
+
+    public boolean isCommnetOrReplay() {
+        return commnetOrReplay;
+    }
+
+    public String getReplayID() {
+        return replayID;
+    }
+
+    public String getReplyName() {
+        return replyName;
     }
 
     public void setParise(boolean parise) {
@@ -91,6 +104,13 @@ public class WritePopwindows extends PopupWindow{
     }
 
     private void bind() {
+        dianzan1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((HealthCircleDetailActivity)context).dianZan();
+            }
+        });
+
         comment1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -121,12 +141,13 @@ public class WritePopwindows extends PopupWindow{
         if (commnetOrReplay){
             comment1.setHint("写评论....");
         }else {
-            comment1.setHint("对"+userName+"回复：");
+            comment1.setHint("对"+replyName+"回复：");
         }
     }
 
+    public String word ="";
     private void writeComment(String replayID){
-        String word = comment1.getText().toString();
+        word = comment1.getText().toString();
         if (!StringUtils.isEmpty(word)){
             CommentInfo commentInfo = new CommentInfo();
             if (replayID.equals("0")){
@@ -134,14 +155,16 @@ public class WritePopwindows extends PopupWindow{
             }else {
                 commentInfo.setIs_reply(true);
             }
-            commentInfo.setContent(comment1.getText().toString());
+            commentInfo.setContent(word);
             commentInfo.setNews_id(id);
             commentInfo.setUser_id(loginuser.getId());
             commentInfo.setReply_id(replayID);
-            bmobUtils.saveCommentInfo(commentInfo,123,handler);
+            bmobUtils.saveCommentInfo(commentInfo,888,handler);
+            ((HealthCircleDetailActivity)context).comment.setClickable(false);
         }else {
             ToastUtils.shortToast(context,"请输入评论");
         }
+        dismiss();
     }
 
     private void findViewsByIds(View view) {

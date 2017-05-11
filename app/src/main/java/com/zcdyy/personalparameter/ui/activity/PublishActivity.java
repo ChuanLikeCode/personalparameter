@@ -94,7 +94,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         title.setText("发布动态");
         bmobUtils = new BmobUtils(this);
         healthCircle = new HealthCircle();
-        findViewsById(R.id.top_rl_back).setVisibility(View.GONE);
     }
 
     @Override

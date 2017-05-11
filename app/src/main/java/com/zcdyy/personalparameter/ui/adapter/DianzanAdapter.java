@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.application.MyApplication;
+import com.zcdyy.personalparameter.bean.Praise;
 import com.zcdyy.personalparameter.bean.PraiseInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.listener.OnItemClickListener;
@@ -24,24 +25,22 @@ import java.util.List;
  */
 
 public class DianzanAdapter extends RecyclerView.Adapter<DianzanAdapter.MyViewHolder>{
-    private List<PraiseInfo> list;
     private Context context;
     private UserInfo userInfo;
-    private List<UserInfo> userInfoList;
+    private List<Praise> list;
     public DianzanAdapter(Context context){
         this.context = context;
     }
 
-    public DianzanAdapter(Context context, List<UserInfo> userInfoList,List<PraiseInfo> list){
+    public DianzanAdapter(Context context,List<Praise> list){
         this.context = context;
         this.list = list;
-        this.userInfoList = userInfoList;
+
         userInfo = MyApplication.getInstance().readLoginUser();
     }
 
-    public void addList(List<UserInfo> userInfoList,List<PraiseInfo> list) {
+    public void addList(List<Praise> list) {
         this.list = list;
-        this.userInfoList = userInfoList;
 //        notifyDataSetChanged();
     }
 
@@ -61,9 +60,9 @@ public class DianzanAdapter extends RecyclerView.Adapter<DianzanAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Glide.with(context).load(userInfoList.get(position).getHead().getFileUrl()).into(holder.head);
-        holder.name.setText(userInfoList.get(position).getName());
-        holder.timeStr.setText(list.get(position).getCreatedAt());
+        Glide.with(context).load(list.get(position).getHead().getFileUrl()).into(holder.head);
+        holder.name.setText(list.get(position).getName());
+        holder.timeStr.setText(list.get(position).getTimeStr());
     }
 
     @Override

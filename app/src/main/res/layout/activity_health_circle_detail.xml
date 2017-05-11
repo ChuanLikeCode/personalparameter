@@ -5,6 +5,7 @@
     android:id="@+id/activity_health_circle_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     tools:context="com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity">
 
     <include
@@ -15,7 +16,7 @@
         android:id="@+id/detail_bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorWindows"
+        android:background="@color/colorWhite"
         android:layout_alignParentBottom="true">
 
         <include layout="@layout/divide_line"/>
@@ -112,14 +113,15 @@
                 android:text="我最喜欢豆豆了"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/content"/>
-            <com.zcdyy.personalparameter.views.showimage.MyImageView
+            <ImageView
                 android:id="@+id/img"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_height="250dp"
                 android:layout_below="@+id/content"
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
-                android:scaleType="centerCrop"
                 android:src="@color/colorBlack" />
             <RelativeLayout
                 android:layout_width="match_parent"
