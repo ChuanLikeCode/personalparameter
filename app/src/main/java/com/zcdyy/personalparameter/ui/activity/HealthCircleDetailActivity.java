@@ -136,16 +136,18 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
         PraiseInfo praiseInfo = null;
         if (isParise){//取消赞
             for (PraiseInfo p:dianzanList){
-                if (p.getUser().getId().equals(loginuser.getId())){
+                if (p.getUser().getObjectId().equals(loginuser.getObjectId())){
                     praiseInfo = p;
                     break;
                 }
             }
+            isParise = false;
             article.setPraiseCount(article.getPraiseCount()-1);
             dianzan.setImageResource(R.drawable.dp_dz_icon_03);
             writePopwindows.dianzan1.setImageResource(R.drawable.dp_dz_icon_03);
             bmobUtils.deletePraiseInfo(praiseInfo,456,234,handler);
         }else {
+            isParise = true;
             praiseInfo = new PraiseInfo();
             praiseInfo.setCircleId(article.getObjectId());
             praiseInfo.setUser(BmobUser.getCurrentUser(UserInfo.class));
@@ -275,6 +277,7 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
                     List<PraiseInfo> praiseInfoList = (List<PraiseInfo>) bundle.getSerializable("zan");
                     if (praiseInfoList!=null){
                         dianzanList.clear();
+                        Collections.reverse(praiseInfoList);
                         dianzanList.addAll(praiseInfoList);
 //                        changDianData();
                     }
@@ -284,7 +287,9 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
                 case 5://获取评论信息成功
                     Bundle bundle1 = msg.getData();
                     List<CommentInfo> commentInfoList = (List<CommentInfo>) bundle1.getSerializable("comment");
+
                     if (commentInfoList!=null){
+                        Collections.reverse(commentInfoList);
                         commentList.clear();
                         commentList.addAll(commentInfoList);
                     }
@@ -294,7 +299,12 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
                 case 7:
                     dianzan.setClickable(true);
                     writePopwindows.dianzan1.setClickable(true);
-                    addPraiseData();
+//                    addPraiseData();
+                    recyclerView.setAdapter(dianzanAdapter);
+                    view_comment.setVisibility(View.INVISIBLE);
+                    view_dianzan.setVisibility(View.VISIBLE);
+                    dianzanOrCommment = true;
+                    bmobUtils.getPraiseInfo(article.getObjectId(),3,handler);//获取点赞
                     ToastUtils.shortToast(HealthCircleDetailActivity.this,"操作成功");
                     break;
                 case 456://点赞成功
@@ -363,7 +373,7 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
             commentInfo.setIs_reply(!writePopwindows.isCommnetOrReplay());
             commentInfo.setReplyUser(writePopwindows.getReplayUser());
         }
-        commentList.add(commentInfo);
+        commentList.add(0,commentInfo);
         recyclerView.setAdapter(commentAdapter);
         commentAdapter.addList(commentList);
         commentAdapter.notifyDataSetChanged();
@@ -417,8 +427,9 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
             materialRefreshLayout.finishRefreshLoadMore();
             materialRefreshLayout.finishRefresh();
         }
+
         for (PraiseInfo p:dianzanList){
-            if (p.getUser().getId().equals(loginuser.getId())){
+            if (p.getUser().getObjectId().equals(loginuser.getObjectId())){
                 isParise = true;
                 writePopwindows.setParise(true);
                 dianzan.setImageResource(R.mipmap.dz);
