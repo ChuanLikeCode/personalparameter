@@ -18,6 +18,8 @@ import com.zcdyy.personalparameter.utils.Utils;
 import com.zcdyy.personalparameter.views.CircleImageView;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,14 +30,15 @@ public class SellerStateCommentAdapter extends RecyclerView.Adapter<SellerStateC
     private Context context;
     private OnItemClickListener onItemClickListener;
     private UserInfo userInfo;
-    private List<Comment> list;
-
-    public SellerStateCommentAdapter(Context context,List<Comment> list){
+    private List<CommentInfo> list;
+    private SimpleDateFormat sdf;
+    public SellerStateCommentAdapter(Context context,List<CommentInfo> list){
         this.context = context;
         this.list = list;
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     }
-    public void addList(List<Comment> list) {
+    public void addList(List<CommentInfo> list) {
         this.list = list;
 
 //        notifyDataSetChanged();
@@ -54,15 +57,19 @@ public class SellerStateCommentAdapter extends RecyclerView.Adapter<SellerStateC
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Glide.with(context).load(list.get(position).getHead().getFileUrl()).into(holder.head);
-        holder.name.setText(list.get(position).getName());
-        holder.timeStr.setText(list.get(position).getTimeStr());
-        if (!list.get(position).isReply()){
+        Glide.with(context).load(list.get(position).getUser().getHead().getFileUrl()).into(holder.head);
+        holder.name.setText(list.get(position).getUser().getName());
+        if (list.get(position).getCreatedAt()==null){
+            holder.timeStr.setText(sdf.format(new Date()));
+        }else {
+            holder.timeStr.setText(list.get(position).getCreatedAt());
+        }
+        if (!list.get(position).is_reply()){
             holder.content.setText(list.get(position).getContent());
         }else {
             holder.content.setText(
                     Html.fromHtml("回复 "+"<html><font color=\"#ff5001\">"+
-                            list.get(position).getReplyName()+":</font></html>" +list.get(position).getContent()));
+                            list.get(position).getReplyUser().getName()+":</font></html>" +list.get(position).getContent()));
         }
     }
 

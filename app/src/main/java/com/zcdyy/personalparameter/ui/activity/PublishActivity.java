@@ -16,6 +16,7 @@ import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.application.MyApplication;
 import com.zcdyy.personalparameter.base.BaseActivity;
 import com.zcdyy.personalparameter.bean.HealthCircle;
+import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.constant.Constants;
 import com.zcdyy.personalparameter.permission.PermissionsChecker;
 import com.zcdyy.personalparameter.utils.BmobUtils;
@@ -26,6 +27,7 @@ import com.zcdyy.personalparameter.views.ActionSheet;
 
 import java.io.File;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
 
@@ -115,7 +117,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private void publishFriend() {
         if (!content.getText().toString().equals("")){
             dialog = ProgressDialog.show(this,null,"正在发布......");
-            healthCircle.setId(loginuser.getId());
+            UserInfo userInfo = BmobUser.getCurrentUser(UserInfo.class);
+            healthCircle.setAuther(userInfo);
             healthCircle.setContent(content.getText().toString());
             healthCircle.setPic(isPic);
             healthCircle.setCommentCount(0);

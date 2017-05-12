@@ -3,6 +3,7 @@ package com.zcdyy.personalparameter.ui.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,12 +19,9 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseFragment;
-import com.zcdyy.personalparameter.bean.Article;
-import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.HealthCircle;
 import com.zcdyy.personalparameter.bean.PraiseInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
-import com.zcdyy.personalparameter.listener.OnItemClickListener;
 import com.zcdyy.personalparameter.listener.OnItemHealthCircleClick;
 import com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity;
 import com.zcdyy.personalparameter.ui.activity.PublishActivity;
@@ -34,12 +32,11 @@ import com.zcdyy.personalparameter.utils.DividerItemDecoration;
 import com.zcdyy.personalparameter.utils.ToastUtils;
 import com.zcdyy.personalparameter.utils.Utils;
 import com.zcdyy.personalparameter.views.EmptyView;
-import com.zcdyy.personalparameter.views.showimage.MyImageView;
-import com.zcdyy.personalparameter.views.showimage.ShowImageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.LockSupport;
+
+import cn.bmob.v3.BmobUser;
 
 
 /**
@@ -49,7 +46,7 @@ import java.util.concurrent.locks.LockSupport;
 
 public class HealthCircleFragment extends BaseFragment implements View.OnClickListener {
     private final int LIST_SUCCESS = 1;
-    private List<Article> list = new ArrayList<>();
+    private List<HealthCircle> list = new ArrayList<>();
     private View view;
     private TextView title,publish;
     private BmobUtils bmobUtils;
@@ -65,25 +62,29 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case LIST_SUCCESS:
-                    if (dataUtils.healthCircleList.size()==0){
-                        handler.sendEmptyMessage(2);
-                    }else {
-                        bmobUtils.getUserInfo(dataUtils.healthCircleList,2,handler);
+//                    bmobUtils.getPraiseInfo(2,handler);
+                    Bundle bundle = msg.getData();
+                    List<HealthCircle> healthCircles = (List<HealthCircle>) bundle.getSerializable("list");
+                    if (healthCircles != null){
+                        list.clear();
+                        list.addAll(healthCircles);
                     }
-                    break;
-                case 2:
-                    list.clear();
-                    list.addAll(dataUtils.setArticleData(loginuser.getId()));
                     setData();
                     break;
+                case 2:
+//                    Bundle bundle1 = msg.getData();
+//                    List<PraiseInfo> praiseInfos = (List<PraiseInfo>) bundle1.getSerializable("list");
+//                    setDianzan();
+                    break;
                 case 123:
+                    ivZan.setClickable(true);
                     ToastUtils.shortToast(getActivity(),"操作成功");
                     break;
                 case 234:
                     ToastUtils.shortToast(getActivity(),"网络错误，请稍后重试");
                     break;
                 case 456:
-                    ivZan.setClickable(true);
+                    bmobUtils.updateHealCircle(healthCircle,123,234,handler);
                     break;
 
             }
@@ -91,6 +92,10 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
 
 
     };
+
+    private void setDianzan() {
+
+    }
 
 
     /**
@@ -140,6 +145,7 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         bmobUtils.queryFriendCircle(LIST_SUCCESS,handler);
     }
 
+    private HealthCircle healthCircle;
     private void bind() {
         Utils.findViewsById(view,R.id.top_rl_right).setOnClickListener(this);
         materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
@@ -164,51 +170,42 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         adapter.setOnItemClickListener(new OnItemHealthCircleClick() {
             @Override
             public void onPraiseClick(ImageView praise, TextView count,int position) {
-                ivZan = praise;
-                ivZan.setClickable(false);
-                HealthCircle healthCircle = dataUtils.healthCircleList.get(position);
-                PraiseInfo praiseInfo = null;
-                if (adapter.map.get(position)){//取消赞
-                    for (PraiseInfo p:dataUtils.praiseInfoList){
-                        if (p.getUser_id().equals(loginuser.getId())){
-                            praiseInfo = p;
-                            break;
-                        }
-                    }
-                    healthCircle.setPraiseCount(healthCircle.getPraiseCount()-1);
-                    praise.setImageResource(R.drawable.dp_dz_icon_03);
-                    bmobUtils.deletePraiseInfo(praiseInfo,456,234,handler);
-                    adapter.map.put(position,false);
-                }else {
-                    praiseInfo = new PraiseInfo();
-                    praiseInfo.setUser_id(loginuser.getId());
-                    praiseInfo.setNews_id(list.get(position).getId());
-                    healthCircle.setPraiseCount(healthCircle.getPraiseCount()+1);
-                    praise.setImageResource(R.mipmap.dz);
-                    bmobUtils.savePraiseInfo(praiseInfo,456,234,handler);
-                    adapter.map.put(position,true);
-                }
-                count.setText(""+healthCircle.getPraiseCount()+"");
-                bmobUtils.updateHealCircle(healthCircle,123,234,handler);
+//                ivZan = praise;
+//                ivZan.setClickable(false);
+//                healthCircle = list.get(position);
+//                PraiseInfo praiseInfo = null;
+//                if (adapter.map.get(position)){//取消赞
+//                    for (PraiseInfo p:dataUtils.praiseInfoList){
+//                        if (p.getUser().getId().equals(loginuser.getId())){
+//                            praiseInfo = p;
+//                            break;
+//                        }
+//                    }
+//                    healthCircle.setPraiseCount(healthCircle.getPraiseCount()-1);
+//                    praise.setImageResource(R.drawable.dp_dz_icon_03);
+//                    bmobUtils.deletePraiseInfo(praiseInfo,456,234,handler);
+//                    adapter.map.put(position,false);
+//                }else {
+//                    praiseInfo = new PraiseInfo();
+//                    praiseInfo.setUser(BmobUser.getCurrentUser(UserInfo.class));
+//                    praiseInfo.setCircleId(list.get(position).getObjectId());
+//                    healthCircle.setPraiseCount(healthCircle.getPraiseCount()+1);
+//                    praise.setImageResource(R.mipmap.dz);
+//                    bmobUtils.savePraiseInfo(praiseInfo,456,234,handler);
+//                    adapter.map.put(position,true);
+//                }
+//                count.setText(""+healthCircle.getPraiseCount()+"");
+
             }
 
             @Override
             public void onItemClick(int position) {
                 Log.e("positon",position+"");
                 Intent intent = new Intent(getActivity(), HealthCircleDetailActivity.class);
-                intent.putExtra("id",list.get(position).getId());
+                intent.putExtra("circle",list.get(position));
                 startActivityForResult(intent,456);
             }
 
-//            @Override
-//            public void onImgClick(MyImageView img, int position) {
-//                Intent intent = new Intent(getActivity(), ShowImageActivity.class);
-//                intent.putExtra("isGif", false);
-//                intent.putExtra("address", list.get(position).getImg().getFileUrl());
-//                intent.putExtra("width", "700");
-//                intent.putExtra("height", "900");
-//                startActivity(intent);
-//            }
         });
     }
 

@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,12 +23,11 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseActivity;
-import com.zcdyy.personalparameter.bean.Article;
 import com.zcdyy.personalparameter.bean.Comment;
 import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.HealthCircle;
-import com.zcdyy.personalparameter.bean.Praise;
 import com.zcdyy.personalparameter.bean.PraiseInfo;
+import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.listener.OnItemClickListener;
 import com.zcdyy.personalparameter.ui.adapter.DianzanAdapter;
 import com.zcdyy.personalparameter.ui.adapter.SellerStateCommentAdapter;
@@ -39,12 +38,14 @@ import com.zcdyy.personalparameter.views.CircleImageView;
 import com.zcdyy.personalparameter.views.EmptyView;
 import com.zcdyy.personalparameter.views.FullyLinearLayoutManager;
 import com.zcdyy.personalparameter.views.WritePopwindows;
-import com.zcdyy.personalparameter.views.showimage.MyImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import cn.bmob.v3.BmobUser;
 
 public class HealthCircleDetailActivity extends BaseActivity implements View.OnClickListener {
     private boolean isRequestData = true;
@@ -54,9 +55,9 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
     private boolean dianzanOrCommment = false;
     private boolean commnetOrReplay = true;
     private DianzanAdapter dianzanAdapter;
-    private List<Praise> dianzanList = new ArrayList<>();//点赞列表
+    private List<PraiseInfo> dianzanList = new ArrayList<>();//点赞列表
     private SellerStateCommentAdapter commentAdapter;
-    private List<Comment> commentList = new ArrayList<>();//评论列表
+    private List<CommentInfo> commentList = new ArrayList<>();//评论列表
     private MaterialRefreshLayout materialRefreshLayout;
     private EmptyView emptyView;
     private final int READ_DETAIL_SUCCESS = 888;
@@ -85,10 +86,8 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
 
     private BmobUtils bmobUtils;
     private DataUtils dataUtils;
-    private Article article;
+    private HealthCircle article;
 
-    private Receiver receiver;
-    private CommentReceiver commentReceiver;
     private SimpleDateFormat dateFormat;
     @Override
     protected void findViewByIDS() {
@@ -133,30 +132,30 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
      * 点赞
      */
     public void dianZan(){
-        HealthCircle healthCircle = dataUtils.healthCircleList.get(0);
+
         PraiseInfo praiseInfo = null;
         if (isParise){//取消赞
-            for (PraiseInfo p:dataUtils.praiseInfoList){
-                if (p.getUser_id().equals(loginuser.getId())){
+            for (PraiseInfo p:dianzanList){
+                if (p.getUser().getId().equals(loginuser.getId())){
                     praiseInfo = p;
                     break;
                 }
             }
-            healthCircle.setPraiseCount(healthCircle.getPraiseCount()-1);
+            article.setPraiseCount(article.getPraiseCount()-1);
             dianzan.setImageResource(R.drawable.dp_dz_icon_03);
             writePopwindows.dianzan1.setImageResource(R.drawable.dp_dz_icon_03);
             bmobUtils.deletePraiseInfo(praiseInfo,456,234,handler);
         }else {
             praiseInfo = new PraiseInfo();
-            praiseInfo.setUser_id(loginuser.getId());
-            praiseInfo.setNews_id(article.getId());
-            healthCircle.setPraiseCount(healthCircle.getPraiseCount()+1);
+            praiseInfo.setCircleId(article.getObjectId());
+            praiseInfo.setUser(BmobUser.getCurrentUser(UserInfo.class));
+            article.setPraiseCount(article.getPraiseCount()+1);
             dianzan.setImageResource(R.mipmap.dz);
             writePopwindows.dianzan1.setImageResource(R.mipmap.dz);
             bmobUtils.savePraiseInfo(praiseInfo,456,234,handler);
         }
-        dianzanCount.setText(""+healthCircle.getPraiseCount()+"");
-        bmobUtils.updateHealCircle(healthCircle,456,234,handler);
+        dianzanCount.setText(""+article.getPraiseCount()+"");
+
     }
     private void bind() {
         dianzan.setOnClickListener(this);
@@ -169,8 +168,11 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
         commentAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                writePopwindows.setReplyName(commentList.get(position).getReplyName());
-                writePopwindows.setReplayID(commentList.get(position).getUserId());
+                if (loginuser.getObjectId().equals(commentList.get(position).getUser().getObjectId())){
+                    ToastUtils.shortToast(HealthCircleDetailActivity.this,"不能自己回复自己");
+                    return;
+                }
+                writePopwindows.setReplayUser(commentList.get(position).getUser());
                 writePopwindows.setCommnetOrReplay(false);//表示回复评论
                 writePopwindows.initData();
                 writePopwindows.showAtLocation(getCurrentFocus(), Gravity.BOTTOM,0,0);
@@ -181,8 +183,8 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                writePopwindows.initData();
                 writePopwindows.setCommnetOrReplay(true);//表示评论
+                writePopwindows.initData();
                 writePopwindows.showAtLocation(getCurrentFocus(), Gravity.BOTTOM,0,0);
                 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
@@ -220,9 +222,11 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
             @Override
             public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
                 if (dianzanOrCommment){//点赞
-                    bmobUtils.getPraiseInfo(id,3,handler);
+                    getDianzan = 0;
+                    bmobUtils.getPraiseInfo(article.getObjectId(),3,handler);
                 }else {
-                    bmobUtils.getCommnetInfo(id,5,handler);//获取评论
+                    getComment = 0;
+                    bmobUtils.getCommnetInfo(article,5,handler);//获取评论
                 }
             }
 
@@ -239,37 +243,25 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
             }
         });
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(receiver);
-        unregisterReceiver(commentReceiver);
-    }
-
     private void initData() {
         dialog = ProgressDialog.show(this,null,"加载数据....");
-        receiver = new Receiver();
         dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-        commentReceiver  = new CommentReceiver();
-        IntentFilter filter = new IntentFilter("zan");
-        IntentFilter filter1 = new IntentFilter("comment");
-        registerReceiver(receiver,filter);
-        registerReceiver(commentReceiver,filter1);
+        loginuser = BmobUser.getCurrentUser(UserInfo.class);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         title.setFocusableInTouchMode(true);//是标题获得焦点
         title.requestFocus();
         emptyView.setNotify("暂无评论");
         view_dianzan.setVisibility(View.GONE);
-        id = getIntent().getStringExtra("id");
-        writePopwindows = new WritePopwindows(this,id);
+        article = (HealthCircle) getIntent().getSerializableExtra("circle");
+        changData();//设置文章详情数据
+        writePopwindows = new WritePopwindows(this,article);
         dataUtils = new DataUtils();
         bmobUtils = new BmobUtils(this);
         bmobUtils.setDataUtils(dataUtils);
         writePopwindows.setHandler(handler);
-        bmobUtils.getHealthCircle(id,loginuser.getId(),1,handler);
-        bmobUtils.getPraiseInfo(id,3,handler);//获取点赞
-        bmobUtils.getCommnetInfo(id,5,handler);//获取评论
+//        bmobUtils.getHealthCircle(id,loginuser.getId(),1,handler);
+        bmobUtils.getPraiseInfo(article.getObjectId(),3,handler);//获取点赞
+        bmobUtils.getCommnetInfo(article,5,handler);//获取评论
      }
 
     private int getComment = 0;
@@ -278,54 +270,43 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 1://获取文章详情
-                    bmobUtils.getUserInfo(dataUtils.healthCircleList,2,handler);//获取发布的用户信息
-                    break;
-                case 2://获取发布的用户信息和文章详情成功
-                    article = dataUtils.getArticle();
-                    changData();//设置文章详情数据
-                    break;
                 case 3://点赞获取成功
-                    bmobUtils.getPraiseUserInfo(dataUtils.praiseInfoList,4,handler);//点赞用户信息获取
-                    break;
-                case 4://获取点赞和用户信息成功
-                    dianzanList.addAll(dataUtils.getPraiseList());
-                    changDianData();//设置点赞数据
-                    break;
-                case 5://获取评论信息成功
-                    if (dataUtils.commentInfoList.size()!=0){//没有人评论就直接设置数据
-                        bmobUtils.getCommentUserInfo(dataUtils.commentInfoList,6,handler);//获取评论的用户信息
-                        bmobUtils.getCommentReplyUserInfo(dataUtils.commentInfoList,6,handler);//获取回复的用户信息
-                    }else {
-                        handler.sendEmptyMessage(6);
+                    Bundle bundle = msg.getData();
+                    List<PraiseInfo> praiseInfoList = (List<PraiseInfo>) bundle.getSerializable("zan");
+                    if (praiseInfoList!=null){
+                        dianzanList.clear();
+                        dianzanList.addAll(praiseInfoList);
+//                        changDianData();
                     }
+                    changDianData();
                     break;
-                case 6://获取评论信息成功和用户信息成功
-                    Intent intent = new Intent("comment");
-                    sendBroadcast(intent);
-                    break;
-                case 7://获取的评论设置数据
-                    commentList.addAll(dataUtils.getCommetList());
+
+                case 5://获取评论信息成功
+                    Bundle bundle1 = msg.getData();
+                    List<CommentInfo> commentInfoList = (List<CommentInfo>) bundle1.getSerializable("comment");
+                    if (commentInfoList!=null){
+                        commentList.clear();
+                        commentList.addAll(commentInfoList);
+                    }
                     changeCommentData();
                     break;
-                case 456://点赞成功
-                    Intent intent1 = new Intent("zan");
-                    sendBroadcast(intent1);
-                    break;
-                case 999://点赞设置数据
+
+                case 7:
                     dianzan.setClickable(true);
                     writePopwindows.dianzan1.setClickable(true);
                     addPraiseData();
                     ToastUtils.shortToast(HealthCircleDetailActivity.this,"操作成功");
                     break;
+                case 456://点赞成功
+                    bmobUtils.updateHealCircle(article,7,234,handler);
+                    break;
                 case 234:
                     ToastUtils.shortToast(HealthCircleDetailActivity.this,"网络错误，请稍后重试");
                     break;
                 case 888://发表评论成功
-                    HealthCircle healthCircle = dataUtils.healthCircleList.get(0);
-                    healthCircle.setCommentCount(healthCircle.getCommentCount()+1);
-                    commentCount.setText(""+healthCircle.getCommentCount()+"");
-                    bmobUtils.updateHealCircle(healthCircle,90,234,handler);
+                    article.setCommentCount(article.getCommentCount()+1);
+                    commentCount.setText(""+article.getCommentCount()+"");
+                    bmobUtils.updateHealCircle(article,90,234,handler);
                     break;
                 case 90://更新文章详情成功
                     addCommentData();//增加评论列表数据
@@ -345,17 +326,16 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
             dianzan.setImageResource(R.drawable.dp_dz_icon_03);
             int pos = 0;
             for (int i = 0;i<dianzanList.size();i++){
-                if (dianzanList.get(i).getName().equals(loginuser.getName())){
+                if (dianzanList.get(i).getUser().getName().equals(loginuser.getName())){
                     pos = i;
                 }
             }
             dianzanList.remove(pos);
         }else {//点赞
             isParise = true;
-            Praise praise = new Praise();
-            praise.setTimeStr(dateFormat.format(new Date()));
-            praise.setHead(loginuser.getHead());
-            praise.setName(loginuser.getName());
+            PraiseInfo praise = new PraiseInfo();
+            praise.setUser(BmobUser.getCurrentUser(UserInfo.class));
+            praise.setCircleId(article.getObjectId());
             dianzanList.add(praise);
         }
         if (dianzanList.size() == 0) {
@@ -375,18 +355,15 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
      * 增加评论列表数据
      */
     private void addCommentData() {
-        Comment comment = new Comment();
-        comment.setTimeStr(dateFormat.format(new Date()));
-        comment.setUserId(loginuser.getId());
-        comment.setReply(!writePopwindows.isCommnetOrReplay());//false 为评论 true为回复
-        if (!writePopwindows.isCommnetOrReplay()){//true为评论 false为回复
-            comment.setReplyId(writePopwindows.getReplayID());
-            comment.setReplyName(writePopwindows.getReplyName());
+        CommentInfo commentInfo = new CommentInfo();
+        commentInfo.setCircle(article);
+        commentInfo.setUser(BmobUser.getCurrentUser(UserInfo.class));
+        commentInfo.setContent(writePopwindows.word);
+        if (!writePopwindows.isCommnetOrReplay()){
+            commentInfo.setIs_reply(!writePopwindows.isCommnetOrReplay());
+            commentInfo.setReplyUser(writePopwindows.getReplayUser());
         }
-        comment.setName(loginuser.getName());
-        comment.setHead(loginuser.getHead());
-        comment.setContent(writePopwindows.word);
-        commentList.add(0,comment);
+        commentList.add(commentInfo);
         recyclerView.setAdapter(commentAdapter);
         commentAdapter.addList(commentList);
         commentAdapter.notifyDataSetChanged();
@@ -408,6 +385,7 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
      */
     private void changeCommentData() {
         //判断如果没有数据的话，则显示空提示
+        Log.e("changeCommentData",dianzanOrCommment+"");
         if (commentList.size() == 0) {
             emptyView.setNotify("暂无评论");
         } else {
@@ -439,14 +417,20 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
             materialRefreshLayout.finishRefreshLoadMore();
             materialRefreshLayout.finishRefresh();
         }
-
+        for (PraiseInfo p:dianzanList){
+            if (p.getUser().getId().equals(loginuser.getId())){
+                isParise = true;
+                writePopwindows.setParise(true);
+                dianzan.setImageResource(R.mipmap.dz);
+            }
+        }
     }
 
     private void changData() {
-        name.setText(article.getName());
-        Glide.with(this).load(article.getHead().getFileUrl())
+        name.setText(article.getAuther().getName());
+        Glide.with(this).load(article.getAuther().getHead().getFileUrl())
                 .error(R.mipmap.default_head).into(head);
-        timeStr.setText(article.getTimeStr());
+        timeStr.setText(article.getCreatedAt());
         content.setText(article.getContent());
         if (article.isPic()){
             Glide.with(this).load(article.getImg().getFileUrl())
@@ -456,44 +440,6 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
         }
         commentCount.setText(""+article.getCommentCount()+"");
         dianzanCount.setText(""+article.getPraiseCount()+"");
-        if (article.isPraise()){
-            isParise = true;
-            writePopwindows.setParise(true);
-            dianzan.setImageResource(R.mipmap.dz);
-        }
         dialog.dismiss();
     }
-
-    /**
-     * 点赞的receiver
-     */
-    public class Receiver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("zan")){
-                getDianzan++;
-                if (getDianzan==2){
-                    handler.sendEmptyMessage(999);//点赞完成之后，信息全部更新
-                }
-            }
-        }
-    }
-
-    /**
-     * 评论的receiver
-     */
-    public class CommentReceiver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("comment")){
-                getComment++;
-                if (getComment==2){
-                    handler.sendEmptyMessage(7);//全部评论信息获取完成
-                }
-            }
-        }
-    }
-
 }

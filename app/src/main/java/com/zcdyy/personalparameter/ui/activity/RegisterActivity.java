@@ -103,7 +103,7 @@ public class RegisterActivity extends BaseActivity {
                     Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_LONG).show();
                     userPassword = password.getText().toString();
                     userPhone = phone.getText().toString();
-                    account.setAccount(userPhone);
+                    account.setUsername(userPhone);
                     account.setPassword(userPassword);
                     account.setNewInfo(true);
                     bmobUtils.addUserInfo(account);

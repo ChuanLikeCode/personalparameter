@@ -3,15 +3,16 @@ package com.zcdyy.personalparameter.bean;
 import java.io.Serializable;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by Huangjinfu on 2016/11/9.
  */
-public class UserInfo extends BmobObject implements Serializable{
+public class UserInfo extends BmobUser implements Serializable{
     private String id;//用户ID
-    private String account;//用户账号
-    private String password;//用户密码
+//    private String username;//用户账号
+//    private String password;//用户密码
     private BmobFile head;//用户头像
     private String name;//用户名字
     private String sex;//性别
@@ -19,6 +20,16 @@ public class UserInfo extends BmobObject implements Serializable{
     private String height;//用户身高
     private String weight;//用户体重
     private boolean newInfo;//是否编辑过信息
+
+//    @Override
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    @Override
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 
     public String getWeight() {
         return weight;
@@ -68,21 +79,14 @@ public class UserInfo extends BmobObject implements Serializable{
         this.name = name;
     }
 
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    @Override
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     public String getSex() {
         return sex;

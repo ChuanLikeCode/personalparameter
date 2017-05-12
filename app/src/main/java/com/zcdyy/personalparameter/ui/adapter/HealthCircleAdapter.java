@@ -1,43 +1,25 @@
 package com.zcdyy.personalparameter.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zcdyy.personalparameter.R;
-import com.zcdyy.personalparameter.application.MyApplication;
-import com.zcdyy.personalparameter.bean.Article;
 import com.zcdyy.personalparameter.bean.HealthCircle;
-import com.zcdyy.personalparameter.bean.PraiseInfo;
-import com.zcdyy.personalparameter.bean.UserInfo;
-import com.zcdyy.personalparameter.listener.OnItemClickListener;
 import com.zcdyy.personalparameter.listener.OnItemHealthCircleClick;
-import com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity;
-import com.zcdyy.personalparameter.utils.BmobUtils;
-import com.zcdyy.personalparameter.utils.ImageLoaderUtils;
-import com.zcdyy.personalparameter.utils.ToastUtils;
 import com.zcdyy.personalparameter.utils.Utils;
 import com.zcdyy.personalparameter.views.CircleImageView;
-import com.zcdyy.personalparameter.views.showimage.MyImageView;
-import com.zcdyy.personalparameter.views.showimage.ShowImageActivity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cn.bmob.v3.BmobQuery;
 
 /**
  * Created by zhouchuan on 2017/5/10.
@@ -46,13 +28,13 @@ import cn.bmob.v3.BmobQuery;
 public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapter.MyViewHolder> {
     int w;
     private Context context;
-    private List<Article> list;
+    private List<HealthCircle> list;
 
     private OnItemHealthCircleClick onItemClickListener;
 
     public Map<Integer,Boolean> map = new HashMap<>();
 
-    public HealthCircleAdapter(Context context, List<Article> list){
+    public HealthCircleAdapter(Context context, List<HealthCircle> list){
         this.context = context;
         this.list = list;
         map.clear();
@@ -61,7 +43,7 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
         }
     }
 
-    public void setList(List<Article> list) {
+    public void setList(List<HealthCircle> list) {
         this.list = list;
         map.clear();
         for (int i = 0;i<list.size();i++){
@@ -80,16 +62,16 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        if (list.get(position).isPraise()){
-            holder.iv_zan.setImageResource(R.mipmap.dz);
-            map.put(position,true);
-        }
-        Glide.with(context).load(list.get(position).getHead().getFileUrl())
+//        if (list.get(position).isPraise()){
+//            holder.iv_zan.setImageResource(R.mipmap.dz);
+//            map.put(position,true);
+//        }
+        Glide.with(context).load(list.get(position).getAuther().getHead().getFileUrl())
                 .error(R.mipmap.default_head).into(holder.head);
-        holder.name.setText(list.get(position).getName());
+        holder.name.setText(list.get(position).getAuther().getName());
 
         holder.content.setText(list.get(position).getContent());
-        holder.timeStr.setText(list.get(position).getTimeStr());
+        holder.timeStr.setText(list.get(position).getCreatedAt());
         holder.commentCount.setText(""+list.get(position).getCommentCount()+"");
         holder.zanCount.setText(""+list.get(position).getPraiseCount()+"");
         Log.e("pic",list.get(position).isPic()+"");
@@ -97,16 +79,14 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
             holder.img.setVisibility(View.VISIBLE);
             Glide.with(context).load(list.get(position).getImg().getFileUrl())
                     .error(R.drawable.chat_xe_icon2_03).into(holder.img);
-//            holder.img.setAddress(null, list.get(position).getImg().getFileUrl(),
-//                    false, dip2px(context, w - 200) + "", dip2px(context, 250) + "");
         }else {
             holder.img.setVisibility(View.GONE);
         }
-        if (map.get(position)){
-            holder.iv_zan.setImageResource(R.mipmap.dz);
-        }else {
-            holder.iv_zan.setImageResource(R.drawable.dp_dz_icon_03);
-        }
+//        if (map.get(position)){
+//            holder.iv_zan.setImageResource(R.mipmap.dz);
+//        }else {
+//            holder.iv_zan.setImageResource(R.drawable.dp_dz_icon_03);
+//        }
 
     }
 

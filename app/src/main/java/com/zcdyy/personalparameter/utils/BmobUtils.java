@@ -1,6 +1,7 @@
 package com.zcdyy.personalparameter.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,7 +26,9 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -82,7 +85,8 @@ public class BmobUtils {
      * @param userInfo
      */
     public void updateFirstInfo(UserInfo userInfo) {
-        userInfo.update(new UpdateListener() {
+        BmobUser info = BmobUser.getCurrentUser();
+        userInfo.update(info.getObjectId(),new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -167,26 +171,20 @@ public class BmobUtils {
     /**
      * 登录查询是否账号密码输入错误
      */
-    public void queryAccount(final UserInfo account) {
-        BmobQuery<UserInfo> bmobQuery = new BmobQuery<>();
-        bmobQuery.findObjects(new FindListener<UserInfo>() {
+    public void queryAccount(final UserInfo account, final int resultCode, final int failedCode, final Handler handler) {
+
+        account.login(new SaveListener<UserInfo>() {
             @Override
-            public void done(List<UserInfo> list, BmobException e) {
-                if (e == null) {
+            public void done(UserInfo userInfo, BmobException e) {
+                if (e==null){
                     Log.e("queryAccount", "ok");
-                    for (UserInfo a :
-                            list) {
-                        if (a.getAccount().equals(account.getAccount()) && a.getPassword().equals(account.getPassword())) {
-                            loginSuccess = true;
-                            MyApplication.getInstance().saveUserInfo(a);
-                            break;
-                        }
-                    }
-                } else {
-                    e.printStackTrace();
-                    Log.e("queryAccount", "Failed");
+                    UserInfo userInfo1 = BmobUser.getCurrentUser(UserInfo.class);
+                    MyApplication.getInstance().saveUserInfo(userInfo1);
+                    handler.sendEmptyMessage(resultCode);
+                }else {
+                    Log.e("queryAccount", e.getMessage());
+                    handler.sendEmptyMessage(failedCode);
                 }
-                ((LoginActivity) context).handler.sendEmptyMessage(Constants.ResultCode.RESULT_SUCCESS);
             }
         });
     }
@@ -203,7 +201,7 @@ public class BmobUtils {
                     Log.e("getBackYourAccount", "ok");
                     for (UserInfo a :
                             list) {
-                        if (a.getAccount().equals(phone)){
+                        if (a.getUsername().equals(phone)){
                             a.setPassword(userPassword);
                             findPassword(a);
                             break;
@@ -263,7 +261,8 @@ public class BmobUtils {
      * @param account
      */
     public void addUserInfo(final UserInfo account) {
-        account.save(new SaveListener<String>() {
+
+        account.signUp(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null){
@@ -291,7 +290,7 @@ public class BmobUtils {
                     Log.e("registerChecked","ok");
                     for (UserInfo a :
                             list) {
-                        if (a.getAccount().equals(userPhone)) {
+                        if (a.getUsername().equals(userPhone)) {
                             registerSuccess = false;
                             break;
                         }
@@ -316,7 +315,8 @@ public class BmobUtils {
      * @param userInfo
      */
     public void updateInfo(UserInfo userInfo){
-        userInfo.update(new UpdateListener() {
+        BmobUser userInfo1 = BmobUser.getCurrentUser();
+        userInfo.update(userInfo1.getObjectId(),new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e==null){
@@ -375,7 +375,8 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void updateHealCircle(HealthCircle healthCircle, final int resultCode, int failedCode,final Handler handler){
+    public void updateHealCircle(HealthCircle healthCircle, final int resultCode, final int failedCode, final Handler handler){
+
         healthCircle.update(healthCircle.getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
@@ -384,6 +385,7 @@ public class BmobUtils {
                     handler.sendEmptyMessage(resultCode);
                 }else {
                     Log.e("updateHealCircle",e.getMessage());
+                    handler.sendEmptyMessage(failedCode);
                 }
             }
         });
@@ -423,23 +425,21 @@ public class BmobUtils {
      * @param handler
      */
     public void queryFriendCircle( final int resultCode, final Handler handler){
-//        StringBuilder sql = new StringBuilder();
-//        sql.append("select h.*,u.name,u.head,");
-//        sql.append("(select count(1) from prise p on p.user_id=").append(userId);
-//        sql.append("and p.news_id=h.object_id ) as hasPraise ");
-//        sql.append("from HealthCircle h left join UserInfo u1 on u1.object_id=h.user_id ");
-//        sql.append(" order by createdAt desc");
+
         BmobQuery<HealthCircle> query = new BmobQuery<>();
+        query.order("-createAt");
+        query.include("auther");// 希望在查询帖子信息的同时也把发布人的信息查询出来
         query.findObjects(new FindListener<HealthCircle>() {
             @Override
             public void done(List<HealthCircle> list, BmobException e) {
                 if (e==null){
                     Log.e("queryFriendCircle","ok");
-                    Collections.reverse(list);
-                    dataUtils.healthCircleList.clear();
-                    dataUtils.healthCircleList.addAll(list);
-                    Log.e("queryFriendCircle",dataUtils.healthCircleList.size()+"");
-                    getPraiseInfo(resultCode,handler);
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    message.what =resultCode;
+                    bundle.putSerializable("list", (Serializable) list);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
                 }else {
                     Log.e("queryFriendCircle",e.getMessage());
                 }
@@ -457,9 +457,12 @@ public class BmobUtils {
             public void done(List<PraiseInfo> list, BmobException e) {
                 if (e==null){
                     Log.e("getPraiseInfo","ok");
-                    dataUtils.praiseInfoList.clear();
-                    dataUtils.praiseInfoList.addAll(list);
-                    handler.sendEmptyMessage(resultCode);
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    message.what =resultCode;
+                    bundle.putSerializable("list", (Serializable) list);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
                 }else {
                     Log.e("getPraiseInfo",e.getMessage());
                 }
@@ -473,6 +476,7 @@ public class BmobUtils {
     public void getHealthCircle(final String objectId, final String userId, final int resultCode, final Handler handler){
         BmobQuery<HealthCircle> query = new BmobQuery<>();
         query.addWhereEqualTo("objectId",objectId);
+        query.include("auther");// 希望在查询帖子信息的同时也把发布人的信息查询出来
         query.findObjects(new FindListener<HealthCircle>() {
             @Override
             public void done(List<HealthCircle> list, BmobException e) {
@@ -496,26 +500,36 @@ public class BmobUtils {
      */
     public void getUserInfo(final List<HealthCircle> healthCircleList, final int resultCode, final Handler handler){
         dataUtils.articleUserList.clear();
-        for (int i = 0;i<healthCircleList.size();i++){
-//            Log.e("getUserInfo",i+"");
-            BmobQuery<UserInfo> query = new BmobQuery<>();
-            query.addWhereEqualTo("id",healthCircleList.get(i).getId());
-            query.findObjects(new FindListener<UserInfo>() {
-                @Override
-                public void done(List<UserInfo> list, BmobException e) {
-                    if (e==null){
-                        Log.e("getUserInfo","ok");
-                        dataUtils.articleUserList.addAll(list);
-                        if (dataUtils.articleUserList.size() == healthCircleList.size()){
-                            handler.sendEmptyMessage(resultCode);
-                        }
-
-                    }else {
-                        Log.e("getUserInfo",e.getMessage());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0;i<healthCircleList.size();i++){
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    BmobQuery<UserInfo> query = new BmobQuery<>();
+//                    query.addWhereEqualTo("id",healthCircleList.get(i).getId());
+                    query.findObjects(new FindListener<UserInfo>() {
+                        @Override
+                        public void done(List<UserInfo> list, BmobException e) {
+                            if (e==null){
+                                Log.e("getUserInfo","ok");
+                                dataUtils.articleUserList.addAll(list);
+                                if (dataUtils.articleUserList.size() == healthCircleList.size()){
+                                    handler.sendEmptyMessage(resultCode);
+                                }
+
+                            }else {
+                                Log.e("getUserInfo",e.getMessage());
+                            }
+                        }
+                    });
                 }
-            });
-        }
+            }
+        }).start();
+
     }
 
 
@@ -551,17 +565,21 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void getPraiseInfo(String news_id,final int resultCode, final Handler handler){
+    public void getPraiseInfo(String id,final int resultCode, final Handler handler){
         BmobQuery<PraiseInfo> query = new BmobQuery<>();
-        query.addWhereEqualTo("news_id",news_id);
+        query.addWhereEqualTo("circleId",id);
+        query.include("user");
         query.findObjects(new FindListener<PraiseInfo>() {
             @Override
             public void done(List<PraiseInfo> list, BmobException e) {
                 if (e==null){
                     Log.e("getPraiseInfo","ok");
-                    dataUtils.praiseInfoList.clear();
-                    dataUtils.praiseInfoList.addAll(list);
-                    handler.sendEmptyMessage(resultCode);
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    message.what = resultCode;
+                    bundle.putSerializable("zan", (Serializable) list);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
                 }else {
                     Log.e("getPraiseInfo",e.getMessage());
                 }
@@ -577,43 +595,59 @@ public class BmobUtils {
      */
     public void getPraiseUserInfo(final List<PraiseInfo> praiseInfoList, final int resultCode, final Handler handler){
         dataUtils.praiseUserInfo.clear();
-        for (int i = 0;i<praiseInfoList.size();i++){
-            BmobQuery<UserInfo> query = new BmobQuery<>();
-            query.addWhereEqualTo("objectId",praiseInfoList.get(i).getUser_id());
-            query.findObjects(new FindListener<UserInfo>() {
+
+            new Thread(new Runnable() {
                 @Override
-                public void done(List<UserInfo> list, BmobException e) {
-                    if (e==null){
-                        Log.e("getPraiseUserInfo","ok");
-                        dataUtils.praiseUserInfo.addAll(list);
-                        if (dataUtils.praiseUserInfo.size() == praiseInfoList.size()){
-                            handler.sendEmptyMessage(resultCode);
+                public void run() {
+                    for (int i = 0;i<praiseInfoList.size();i++){
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    BmobQuery<UserInfo> query = new BmobQuery<>();
+//                    query.addWhereEqualTo("objectId",praiseInfoList.get(i).getUser_id());
+                    query.findObjects(new FindListener<UserInfo>() {
+                        @Override
+                        public void done(List<UserInfo> list, BmobException e) {
+                            if (e==null){
+                                Log.e("getPraiseUserInfo","ok");
+                                dataUtils.praiseUserInfo.addAll(list);
+                                if (dataUtils.praiseUserInfo.size() == praiseInfoList.size()){
+                                    handler.sendEmptyMessage(resultCode);
+                                }
+                            }else {
+                                Log.e("getPraiseUserInfo",e.getMessage());
+                            }
                         }
-                    }else {
-                        Log.e("getPraiseUserInfo",e.getMessage());
+                    });
                     }
                 }
-            });
-        }
+            }).start();
+
+
     }
 
     /**
      * 获取文章的评论
-     * @param news_id  文章的ID
      * @param resultCode
      * @param handler
      */
-    public void getCommnetInfo(String news_id,final int resultCode, final Handler handler){
+    public void getCommnetInfo(HealthCircle circle,final int resultCode, final Handler handler){
         BmobQuery<CommentInfo> query = new BmobQuery<>();
-        query.addWhereEqualTo("news_id",news_id);
+        query.addWhereEqualTo("circle",new BmobPointer(circle));
+        query.include("user,replyUser");
         query.findObjects(new FindListener<CommentInfo>() {
             @Override
             public void done(List<CommentInfo> list, BmobException e) {
                 if (e==null){
                     Log.e("getCommnetInfo","ok");
-                    dataUtils.commentInfoList.clear();
-                    dataUtils.commentInfoList.addAll(list);
-                    handler.sendEmptyMessage(resultCode);
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    message.what = resultCode;
+                    bundle.putSerializable("comment", (Serializable) list);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
                 }else {
                     Log.e("getCommnetInfo",e.getMessage());
                 }
@@ -629,24 +663,37 @@ public class BmobUtils {
      */
     public void getCommentUserInfo(final List<CommentInfo> commentInfoList, final int resultCode, final Handler handler){
         dataUtils.commentUserInfo.clear();
-        for (int i = 0;i<commentInfoList.size();i++){
-            BmobQuery<UserInfo> query = new BmobQuery<>();
-            query.addWhereEqualTo("objectId",commentInfoList.get(i).getUser_id());
-            query.findObjects(new FindListener<UserInfo>() {
-                @Override
-                public void done(List<UserInfo> list, BmobException e) {
-                    if (e==null){
-                        Log.e("getCommentUserInfo","ok");
-                        dataUtils.commentUserInfo.addAll(list);
-                        if (dataUtils.commentUserInfo.size()==commentInfoList.size()){
-                            handler.sendEmptyMessage(resultCode);
-                        }
-                    }else {
-                        Log.e("getCommentUserInfo",e.getMessage());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0;i<commentInfoList.size();i++){
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    BmobQuery<UserInfo> query = new BmobQuery<>();
+//                    query.addWhereEqualTo("objectId",commentInfoList.get(i).getUser_id());
+                    query.findObjects(new FindListener<UserInfo>() {
+                        @Override
+                        public void done(List<UserInfo> list, BmobException e) {
+                            if (e==null){
+                                dataUtils.commentUserInfo.addAll(list);
+                                if (dataUtils.commentUserInfo.size()==commentInfoList.size()){
+//                            Intent intent = new Intent("comment");
+                                    Log.e("getCommentUserInfo","ok");
+                                    handler.sendEmptyMessage(resultCode);
+//                            context.sendBroadcast(intent);
+                                }
+                            }else {
+                                Log.e("getCommentUserInfo",e.getMessage());
+                            }
+                        }
+                    });
                 }
-            });
-        }
+            }
+        }).start();
+
     }
 
     /**
@@ -655,7 +702,7 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void getCommentReplyUserInfo(List<CommentInfo> commentInfoList,final int resultCode, final Handler handler){
+    public void getCommentReplyUserInfo(final List<CommentInfo> commentInfoList, final int resultCode, final Handler handler){
         dataUtils.replyUserInfo.clear();
         int count = 0;
         for (CommentInfo c:commentInfoList){
@@ -668,61 +715,43 @@ public class BmobUtils {
             return;
         }
         final int finalCount = count;
-        for (int i = 0;i<commentInfoList.size();i++){
-            if (commentInfoList.get(i).is_reply()){
-                BmobQuery<UserInfo> query = new BmobQuery<>();
-                query.addWhereEqualTo("objectId",commentInfoList.get(i).getReply_id());
-                query.findObjects(new FindListener<UserInfo>() {
-                    @Override
-                    public void done(List<UserInfo> list, BmobException e) {
-                        if (e==null){
-                            Log.e("getCommentReplyUserInfo","ok");
-                            dataUtils.commentUserInfo.addAll(list);
-                            if (dataUtils.commentUserInfo.size()== finalCount){
-                                handler.sendEmptyMessage(resultCode);
-                            }
-                        }else {
-                            Log.e("getCommentReplyUserInfo",e.getMessage());
-                        }
-                    }
-                });
-            }
-
-        }
-
-    }
-    /**
-     * 查询动态--个人
-     * @param resultCode
-     * @param handler
-     */
-    public void queryPersonalCircle(final UserInfo userInfo, final int resultCode, final Handler handler){
-        BmobQuery<HealthCircle> query = new BmobQuery<>();
-        query.findObjects(new FindListener<HealthCircle>() {
+        new Thread(new Runnable() {
             @Override
-            public void done(List<HealthCircle> list, BmobException e) {
-                if (e==null){
-                    List<HealthCircle> healthCircles = new ArrayList<HealthCircle>();
-                    for (HealthCircle f:list){
-                        if (f.getId().equals(userInfo.getId())){
-                            healthCircles.add(f);
-                        }
+            public void run() {
+                for (int i = 0;i<commentInfoList.size();i++){
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    Log.e("queryPersonalCircle","ok");
-                    Collections.reverse(healthCircles);
-                    Message message = new Message();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("list", (Serializable) healthCircles);
-                    message.setData(bundle);
-                    message.what = resultCode;
-                    handler.sendMessage(message);
-                }else {
-                    Log.e("queryPersonalCircle",e.getMessage());
+                    if (commentInfoList.get(i).is_reply()){
+                        BmobQuery<UserInfo> query = new BmobQuery<>();
+//                        query.addWhereEqualTo("objectId",commentInfoList.get(i).getReply_id());
+                        query.findObjects(new FindListener<UserInfo>() {
+                            @Override
+                            public void done(List<UserInfo> list, BmobException e) {
+                                if (e==null){
+//                            Log.e("getCommentReplyUserInfo","ok");
+                                    dataUtils.replyUserInfo.addAll(list);
+                                    if (dataUtils.replyUserInfo.size()== finalCount){
+                                        Log.e("getCommentReplyUserInfo","ok");
+//                                Intent intent = new Intent("comment");
+//                                context.sendBroadcast(intent);
+                                        handler.sendEmptyMessage(resultCode);
+                                    }
+                                }else {
+                                    Log.e("getCommentReplyUserInfo",e.getMessage());
+                                }
+                            }
+                        });
+                    }
+
                 }
             }
-        });
-    }
+        }).start();
 
+
+    }
 
 
     /**
@@ -750,108 +779,4 @@ public class BmobUtils {
         });
     }
 
-
-
-    public void findFriend(final String account, final int resultCode, final Handler handler){
-
-        BmobQuery<UserInfo> query = new BmobQuery<>();
-        query.findObjects(new FindListener<UserInfo>() {
-            @Override
-            public void done(List<UserInfo> list, BmobException e) {
-                if(e == null){
-                    Log.e("findFriend","ok");
-                    for (UserInfo u:list){
-                        if (account.equals(u.getAccount())){
-
-                            cun = true;
-                            userInfo = u;
-                            break;
-                        }
-                    }
-
-                }else {
-                    Log.e("findFriend",e.getMessage());
-                }
-
-                if (cun){
-                    Message message = new Message();
-                    message.what = resultCode;
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("friend",userInfo);
-                    message.setData(bundle);
-                    handler.sendMessage(message);
-                }else {
-                    handler.sendEmptyMessage(404);
-                }
-            }
-
-        });
-    }
-
-
-
-
-
-    /**
-     * 查找朋友详细信息
-     *
-     * @param resultCode
-     * @param handler
-     */
-    public void getFriendInfo(final String id, final int resultCode, final Handler handler) {
-        BmobQuery<UserInfo> query = new BmobQuery<>();
-        query.findObjects(new FindListener<UserInfo>() {
-            @Override
-            public void done(List<UserInfo> list, BmobException e) {
-                if (e == null) {
-                    for (UserInfo userInfo : list) {
-                        if (userInfo.getAccount().equals(id)) {
-                            Message message = new Message();
-                            message.what = resultCode;
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("info", userInfo);
-                            message.setData(bundle);
-                            handler.sendMessage(message);
-                            break;
-                        }
-                    }
-                }else{
-
-                }
-            }
-        });
-    }
-
-
-    /**
-     * 查询动态--朋友
-     * @param resultCode
-     * @param handler
-     */
-    public void findFriendCircle(final UserInfo userInfo, final int resultCode, final Handler handler){
-        BmobQuery<HealthCircle> query = new BmobQuery<>();
-        query.findObjects(new FindListener<HealthCircle>() {
-            @Override
-            public void done(List<HealthCircle> list, BmobException e) {
-                if (e==null){
-                    List<HealthCircle> healthCircles = new ArrayList<HealthCircle>();
-                    for (HealthCircle f:list){
-                        if (f.getId().equals(userInfo.getId())){
-                            healthCircles.add(f);
-                        }
-                    }
-                    Log.e("queryFriendCircle","ok");
-                    Collections.reverse(healthCircles);
-                    Message message = new Message();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("list", (Serializable) healthCircles);
-                    message.setData(bundle);
-                    message.what = resultCode;
-                    handler.sendMessage(message);
-                }else {
-                    Log.e("queryFriendCircle",e.getMessage());
-                }
-            }
-        });
-    }
 }

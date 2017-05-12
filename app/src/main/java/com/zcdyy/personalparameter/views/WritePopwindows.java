@@ -19,12 +19,15 @@ import android.widget.TextView;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.application.MyApplication;
 import com.zcdyy.personalparameter.bean.CommentInfo;
+import com.zcdyy.personalparameter.bean.HealthCircle;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity;
 import com.zcdyy.personalparameter.utils.BmobUtils;
 import com.zcdyy.personalparameter.utils.StringUtils;
 import com.zcdyy.personalparameter.utils.ToastUtils;
 import com.zcdyy.personalparameter.utils.Utils;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by zhouchuan on 2017/4/27.
@@ -37,9 +40,8 @@ public class WritePopwindows extends PopupWindow{
     public EditText comment1;
     private boolean isParise = false;
     private boolean commnetOrReplay = true;//true表示评论
-    private String id;
-    private String replayID;
-    private String replyName;
+    private HealthCircle circle;
+    private UserInfo replayUser;
     private UserInfo loginuser;
     private Handler handler;
     private BmobUtils bmobUtils;
@@ -47,40 +49,35 @@ public class WritePopwindows extends PopupWindow{
         this.handler = handler;
     }
 
-    public void setReplyName(String replyName) {
-        this.replyName = replyName;
+    public UserInfo getReplayUser() {
+        return replayUser;
     }
+
+    public void setReplayUser(UserInfo replayUser) {
+        this.replayUser = replayUser;
+    }
+
 
     public boolean isCommnetOrReplay() {
         return commnetOrReplay;
     }
 
-    public String getReplayID() {
-        return replayID;
-    }
 
-    public String getReplyName() {
-        return replyName;
-    }
 
     public void setParise(boolean parise) {
         isParise = parise;
-    }
-
-    public void setReplayID(String replayID) {
-        this.replayID = replayID;
     }
 
     public void setCommnetOrReplay(boolean commnetOrReplay) {
         this.commnetOrReplay = commnetOrReplay;
     }
 
-    public WritePopwindows(Context context, String id){
+    public WritePopwindows(Context context, HealthCircle circle){
         view = LayoutInflater.from(context).inflate(R.layout.write_popwindow,null);
         this.context = context;
         bmobUtils = new BmobUtils(context);
         loginuser = MyApplication.getInstance().readLoginUser();
-        this.id = id;
+        this.circle = circle;
         findViewsByIds(view);
         bind();
           /* 设置弹出窗口特征 */
@@ -125,7 +122,7 @@ public class WritePopwindows extends PopupWindow{
 
                     }else {
 //                        comment1.setHint("对"+userName+"回复：");
-                        writeComment(replayID);
+                        writeComment("1");
                     }
                     return true;
                 }
@@ -141,7 +138,7 @@ public class WritePopwindows extends PopupWindow{
         if (commnetOrReplay){
             comment1.setHint("写评论....");
         }else {
-            comment1.setHint("对"+replyName+"回复：");
+            comment1.setHint("对"+replayUser.getName()+"回复：");
         }
     }
 
@@ -154,11 +151,12 @@ public class WritePopwindows extends PopupWindow{
                 commentInfo.setIs_reply(false);
             }else {
                 commentInfo.setIs_reply(true);
+                commentInfo.setReplyUser(replayUser);
             }
             commentInfo.setContent(word);
-            commentInfo.setNews_id(id);
-            commentInfo.setUser_id(loginuser.getId());
-            commentInfo.setReply_id(replayID);
+            commentInfo.setCircle(circle);
+            UserInfo info = BmobUser.getCurrentUser(UserInfo.class);
+            commentInfo.setUser(info);
             bmobUtils.saveCommentInfo(commentInfo,888,handler);
             ((HealthCircleDetailActivity)context).comment.setClickable(false);
         }else {

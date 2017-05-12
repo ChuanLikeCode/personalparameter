@@ -119,7 +119,7 @@ public class SettingActivity extends BaseActivity implements ActionSheet.OnSheet
         ImageLoaderUtils.initImage(this, loginuser.getHead().getFileUrl(), head, R.mipmap.default_head);
         name.setText(loginuser.getName());
         sex.setText(loginuser.getSex());
-        phone.setText(loginuser.getAccount());
+        phone.setText(loginuser.getUsername());
         age.setText(loginuser.getAge());
         height.setText(loginuser.getHeight());
         weight.setText(loginuser.getWeight());
@@ -137,12 +137,11 @@ public class SettingActivity extends BaseActivity implements ActionSheet.OnSheet
     }
 
     private void initData() {
-        phone.setText(loginuser.getAccount());
         bombUtils = new BmobUtils(this);
         save.setText("保存");
         save.setVisibility(View.VISIBLE);
         title.setText("编辑个人信息");
-        phone.setText(loginuser.getAccount());
+        phone.setText(loginuser.getUsername());
         pick_age = new ArrayList<>();
         pick_height = new ArrayList<>();
         pick_weight = new ArrayList<>();
