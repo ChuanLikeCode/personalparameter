@@ -63,28 +63,28 @@ public class ReseivePasswordActivity extends BaseActivity {
                 password_et_pre = et_pre.getText().toString();
                 password_et_now = et_now.getText().toString();
                 password_et_confirm = et_confirm.getText().toString();
-                if (!password_et_pre.equals("") || !password_et_now.equals("") || !password_et_confirm.equals("")) {
-                    if (password_et_pre.equals(loginuser.getPassword())) {
-
-                        if (check()) {
-                            if (password_et_confirm.equals(password_et_now)) {
-                                loginuser.setPassword(password_et_confirm);
-                                MyApplication.getInstance().saveUserInfo(loginuser);
-                                bmobUtils.updateInfo(loginuser);
-                                ToastUtils.shortToast(ReseivePasswordActivity.this, "密码修改成功");
-                                finish();
-                            } else {
-                                ToastUtils.shortToast(ReseivePasswordActivity.this, "两次输入的密码不一致");
-                            }
-                        } else {
-                            ToastUtils.shortToast(ReseivePasswordActivity.this, "请输入6-16位的数字或字母");
-                        }
-                    } else {
-                        ToastUtils.shortToast(ReseivePasswordActivity.this, "原密码输入错误");
-                    }
-                } else {
-                    ToastUtils.shortToast(ReseivePasswordActivity.this, "请输入要修改的密码");
-                }
+//                if (!password_et_pre.equals("") || !password_et_now.equals("") || !password_et_confirm.equals("")) {
+//                    if (password_et_pre.equals(loginuser.getPassword())) {
+//
+//                        if (check()) {
+//                            if (password_et_confirm.equals(password_et_now)) {
+//                                loginuser.setPassword(password_et_confirm);
+//                                MyApplication.getInstance().saveUserInfo(loginuser);
+//                                bmobUtils.updateInfo(loginuser);
+//                                ToastUtils.shortToast(ReseivePasswordActivity.this, "密码修改成功");
+//                                finish();
+//                            } else {
+//                                ToastUtils.shortToast(ReseivePasswordActivity.this, "两次输入的密码不一致");
+//                            }
+//                        } else {
+//                            ToastUtils.shortToast(ReseivePasswordActivity.this, "请输入6-16位的数字或字母");
+//                        }
+//                    } else {
+//                        ToastUtils.shortToast(ReseivePasswordActivity.this, "原密码输入错误");
+//                    }
+//                } else {
+//                    ToastUtils.shortToast(ReseivePasswordActivity.this, "请输入要修改的密码");
+//                }
 
             }
         });

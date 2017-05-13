@@ -7,23 +7,22 @@ import cn.bmob.v3.BmobObject;
  */
 
 public class PraiseInfo extends BmobObject{
-    private String user_id;
-        private String news_id;
-//    private String object_id;
+    private UserInfo user;
+    private String circleId;
 
-    public String getUser_id() {
-        return user_id;
+    public UserInfo getUser() {
+        return user;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUser(UserInfo user) {
+        this.user = user;
     }
 
-    public String getNews_id() {
-        return news_id;
+    public String getCircleId() {
+        return circleId;
     }
 
-    public void setNews_id(String news_id) {
-        this.news_id = news_id;
+    public void setCircleId(String circleId) {
+        this.circleId = circleId;
     }
 }

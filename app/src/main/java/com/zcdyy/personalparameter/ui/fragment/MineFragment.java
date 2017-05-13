@@ -65,7 +65,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         }else {
             sex.setImageResource(R.mipmap.girl);
         }
-        phone.setText(userInfo.getAccount());
+        phone.setText(userInfo.getUsername());
     }
 
 

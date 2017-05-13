@@ -6,101 +6,109 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/ll_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/rl_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <com.zcdyy.personalparameter.views.CircleImageView
-            android:id="@+id/head"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            <com.zcdyy.personalparameter.views.CircleImageView
+                android:id="@+id/head"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:src="@color/colorBlack" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/head"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="豆豆"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/title" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="2017.12.1"
+                    android:textColor="@color/colorDarkGray"
+                    android:textSize="@dimen/smallSize" />
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_below="@+id/rl_head"
+            android:lineSpacingExtra="3dp"
+            android:text="我最喜欢豆豆了"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/content"/>
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_below="@+id/content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
             android:src="@color/colorBlack" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_below="@id/img"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@id/head"
-            android:orientation="vertical">
-
+            android:padding="15dp">
+            <ImageView
+                android:id="@+id/iv_comment"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/dp_pl_icon_03"/>
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/commet_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="豆豆"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/title" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="2017.12.1"
                 android:textColor="@color/colorDarkGray"
-                android:textSize="@dimen/smallSize" />
+                android:textSize="@dimen/content"
+                android:text="23"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"/>
+
+            <ImageView
+                android:id="@+id/iv_zan"
+                android:layout_width="25dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/dp_dz_icon_03"/>
+            <TextView
+                android:id="@+id/dz_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorDarkGray"
+                android:textSize="@dimen/content"
+                android:text="23"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"/>
         </LinearLayout>
     </RelativeLayout>
 
-
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/head"
-        android:layout_margin="15dp"
-        android:lineSpacingExtra="3dp"
-        android:text="我最喜欢豆豆了"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/content"/>
-    <com.zcdyy.personalparameter.views.showimage.MyImageView
-        android:id="@+id/img"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@+id/content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical"
-        android:scaleType="centerCrop"
-        android:src="@color/colorBlack" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp">
-        <ImageView
-            android:id="@+id/iv_comment"
-            android:layout_width="25dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/dp_pl_icon_03"/>
-        <TextView
-            android:id="@+id/commet_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorDarkGray"
-            android:textSize="@dimen/content"
-            android:text="23"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"/>
-
-        <ImageView
-            android:id="@+id/iv_zan"
-            android:layout_width="25dp"
-            android:layout_height="18dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/dp_dz_icon_03"/>
-        <TextView
-            android:id="@+id/dz_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorDarkGray"
-            android:textSize="@dimen/content"
-            android:text="23"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"/>
-    </LinearLayout>
 
 
 </LinearLayout>

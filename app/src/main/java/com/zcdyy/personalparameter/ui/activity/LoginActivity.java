@@ -32,22 +32,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == Constants.ResultCode.RESULT_SUCCESS){
-                if (BmobUtils.loginSuccess){
-                    dialog.dismiss();
-                   // Log.e("id", account.getId() + "");
-//                    account.setNikeName("小明");
-//                    account.setRealName("小明");
-                    //bmobUtils.updateAccountInfo(account);
-                    //MyApplication.getInstance().saveUserInfo(account);
+            dialog.dismiss();
+            switch (msg.what){
+                case 1:
                     startActivity(EditMyInfoActivity.class);
                     finish();
-                }else{
-                    dialog.dismiss();
+                    break;
+                case 2:
                     Toast.makeText(LoginActivity.this, "用户名或者密码错误", Toast.LENGTH_LONG).show();
                     password.setText("");
-                }
-
+                    break;
             }
         }
     };
@@ -110,14 +104,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void checkAccountAndPassword() {
         userPhone = phone.getText().toString();
         userPassword = password.getText().toString();
-        account.setAccount(userPhone);
+        account.setUsername(userPhone);
         account.setPassword(userPassword);
         Log.e("checkAccount","checkAccount");
         if (userPhone.equals("") || userPassword.equals("")) {
             Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_LONG).show();
         } else {
             dialog = ProgressDialog.show(this, null, "正在登录...");
-            bmobUtils.queryAccount(account);
+            bmobUtils.queryAccount(account,1,2,handler);
         }
     }
 }

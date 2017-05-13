@@ -122,12 +122,11 @@ public class EditMyInfoActivity extends BaseActivity implements ActionSheet.OnSh
     }
 
     private void initData() {
-        phone.setText(loginuser.getAccount());
         bombUtils = new BmobUtils(this);
         save.setText("保存");
         save.setVisibility(View.VISIBLE);
         title.setText("编辑个人信息");
-        phone.setText(loginuser.getAccount());
+        phone.setText(loginuser.getUsername());
         pick_age = new ArrayList<>();
         pick_height = new ArrayList<>();
         pick_weight = new ArrayList<>();

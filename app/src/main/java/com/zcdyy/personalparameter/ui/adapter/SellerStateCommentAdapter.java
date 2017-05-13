@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zcdyy.personalparameter.R;
+import com.zcdyy.personalparameter.bean.Comment;
 import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.listener.OnItemClickListener;
@@ -17,6 +18,8 @@ import com.zcdyy.personalparameter.utils.Utils;
 import com.zcdyy.personalparameter.views.CircleImageView;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,18 +31,16 @@ public class SellerStateCommentAdapter extends RecyclerView.Adapter<SellerStateC
     private OnItemClickListener onItemClickListener;
     private UserInfo userInfo;
     private List<CommentInfo> list;
-    private List<UserInfo> userInfoList;
-    private List<UserInfo> replyUserInfo;
-    public SellerStateCommentAdapter(Context context,List<CommentInfo> list,List<UserInfo> userInfoList,List<UserInfo> replyUserInfo){
+    private SimpleDateFormat sdf;
+    public SellerStateCommentAdapter(Context context,List<CommentInfo> list){
         this.context = context;
         this.list = list;
-        this.userInfoList = userInfoList;
-        this.replyUserInfo = replyUserInfo;
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     }
-    public void addList(List<CommentInfo> list,List<UserInfo> userInfoList,List<UserInfo> replyUserInfo) {
+    public void addList(List<CommentInfo> list) {
         this.list = list;
-        this.userInfoList = userInfoList;
-        this.replyUserInfo = replyUserInfo;
+
 //        notifyDataSetChanged();
     }
 
@@ -56,29 +57,20 @@ public class SellerStateCommentAdapter extends RecyclerView.Adapter<SellerStateC
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Glide.with(context).load(userInfoList.get(position).getHead().getFileUrl()).into(holder.head);
-        holder.name.setText(userInfoList.get(position).getName());
-        holder.timeStr.setText(list.get(position).getCreatedAt());
+        Glide.with(context).load(list.get(position).getUser().getHead().getFileUrl()).into(holder.head);
+        holder.name.setText(list.get(position).getUser().getName());
+        if (list.get(position).getCreatedAt()==null){
+            holder.timeStr.setText(sdf.format(new Date()));
+        }else {
+            holder.timeStr.setText(list.get(position).getCreatedAt());
+        }
         if (!list.get(position).is_reply()){
             holder.content.setText(list.get(position).getContent());
         }else {
-            for (UserInfo u:replyUserInfo){
-                if (u.getId().equals(list.get(position).getReply_id())){
-                    holder.content.setText(
-                            Html.fromHtml("回复 "+"<html><font color=\"#ff5001\">"+
-                                    u.getName()+":</font></html>" +list.get(position).getContent()));
-                    break;
-                }
-            }
+            holder.content.setText(
+                    Html.fromHtml("回复 "+"<html><font color=\"#ff5001\">"+
+                            list.get(position).getReplyUser().getName()+":</font></html>" +list.get(position).getContent()));
         }
-
-//        if (list.get(position).getReplyUserName()==null){
-//            holder.content.setText(list.get(position).getContent());
-//        }else {
-//            holder.content.setText(
-//                    Html.fromHtml("回复 "+"<html><font color=\"#ff5001\">"+
-//                            list.get(position).getReplyUserName()+":</font></html>" +list.get(position).getContent()));
-//        }
     }
 
     @Override

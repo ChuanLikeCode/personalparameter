@@ -19,11 +19,15 @@ import android.widget.TextView;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.application.MyApplication;
 import com.zcdyy.personalparameter.bean.CommentInfo;
+import com.zcdyy.personalparameter.bean.HealthCircle;
 import com.zcdyy.personalparameter.bean.UserInfo;
+import com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity;
 import com.zcdyy.personalparameter.utils.BmobUtils;
 import com.zcdyy.personalparameter.utils.StringUtils;
 import com.zcdyy.personalparameter.utils.ToastUtils;
 import com.zcdyy.personalparameter.utils.Utils;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by zhouchuan on 2017/4/27.
@@ -32,13 +36,12 @@ import com.zcdyy.personalparameter.utils.Utils;
 public class WritePopwindows extends PopupWindow{
     public View view;
     private Context context;
-    private ImageView dianzan1;
+    public ImageView dianzan1;
     public EditText comment1;
     private boolean isParise = false;
     private boolean commnetOrReplay = true;//true表示评论
-    private String id;
-    private String replayID;
-    private String userName;
+    private HealthCircle circle;
+    private UserInfo replayUser;
     private UserInfo loginuser;
     private Handler handler;
     private BmobUtils bmobUtils;
@@ -46,28 +49,35 @@ public class WritePopwindows extends PopupWindow{
         this.handler = handler;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public UserInfo getReplayUser() {
+        return replayUser;
     }
+
+    public void setReplayUser(UserInfo replayUser) {
+        this.replayUser = replayUser;
+    }
+
+
+    public boolean isCommnetOrReplay() {
+        return commnetOrReplay;
+    }
+
+
 
     public void setParise(boolean parise) {
         isParise = parise;
-    }
-
-    public void setReplayID(String replayID) {
-        this.replayID = replayID;
     }
 
     public void setCommnetOrReplay(boolean commnetOrReplay) {
         this.commnetOrReplay = commnetOrReplay;
     }
 
-    public WritePopwindows(Context context, String id){
+    public WritePopwindows(Context context, HealthCircle circle){
         view = LayoutInflater.from(context).inflate(R.layout.write_popwindow,null);
         this.context = context;
         bmobUtils = new BmobUtils(context);
         loginuser = MyApplication.getInstance().readLoginUser();
-        this.id = id;
+        this.circle = circle;
         findViewsByIds(view);
         bind();
           /* 设置弹出窗口特征 */
@@ -91,6 +101,13 @@ public class WritePopwindows extends PopupWindow{
     }
 
     private void bind() {
+        dianzan1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((HealthCircleDetailActivity)context).dianZan();
+            }
+        });
+
         comment1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -105,7 +122,7 @@ public class WritePopwindows extends PopupWindow{
 
                     }else {
 //                        comment1.setHint("对"+userName+"回复：");
-                        writeComment(replayID);
+                        writeComment("1");
                     }
                     return true;
                 }
@@ -121,27 +138,31 @@ public class WritePopwindows extends PopupWindow{
         if (commnetOrReplay){
             comment1.setHint("写评论....");
         }else {
-            comment1.setHint("对"+userName+"回复：");
+            comment1.setHint("对"+replayUser.getName()+"回复：");
         }
     }
 
+    public String word ="";
     private void writeComment(String replayID){
-        String word = comment1.getText().toString();
+        word = comment1.getText().toString();
         if (!StringUtils.isEmpty(word)){
             CommentInfo commentInfo = new CommentInfo();
             if (replayID.equals("0")){
                 commentInfo.setIs_reply(false);
             }else {
                 commentInfo.setIs_reply(true);
+                commentInfo.setReplyUser(replayUser);
             }
-            commentInfo.setContent(comment1.getText().toString());
-            commentInfo.setNews_id(id);
-            commentInfo.setUser_id(loginuser.getId());
-            commentInfo.setReply_id(replayID);
-            bmobUtils.saveCommentInfo(commentInfo,123,handler);
+            commentInfo.setContent(word);
+            commentInfo.setCircle(circle);
+            UserInfo info = BmobUser.getCurrentUser(UserInfo.class);
+            commentInfo.setUser(info);
+            bmobUtils.saveCommentInfo(commentInfo,888,handler);
+            ((HealthCircleDetailActivity)context).comment.setClickable(false);
         }else {
             ToastUtils.shortToast(context,"请输入评论");
         }
+        dismiss();
     }
 
     private void findViewsByIds(View view) {
