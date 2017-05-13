@@ -23,8 +23,8 @@ public class MyAlertDialog {
     private Dialog dialog;
     private LinearLayout lLayout_bg;
     private TextView txt_title;
-    private TextView txt_msg;
-    private EditText edittxt_result;
+    public TextView txt_msg;
+    public EditText edittxt_result;
     private LinearLayout dialog_Group;
     private ImageView dialog_marBottom;
     private Button btn_neg;

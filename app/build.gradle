@@ -53,22 +53,22 @@ dependencies {
     //    compile 'com.android.support:recyclerview-v7:23.4.0'
     //    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile files('libs/commons-codec-1.6.jar')
-        compile 'com.cjj.materialrefeshlayout:library:1.3.0'
-        compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.cjj.materialrefeshlayout:library:1.3.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     //    compile 'com.youth.banner:banner:1.4.9'
     compile 'com.flyco.roundview:FlycoRoundView_Lib:1.0.0@aar'
     //    compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     compile 'com.android.support:design:23.4.0'
     //    compile 'com.kyleduo.switchbutton:library:1.4.5'
     //    compile 'com.mikepenz:itemanimators:0.5.0@aar'
-//    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+    //    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     compile name: 'SMSSDK-2.1.3', ext: 'aar'
     compile files('libs/MobTools-2016.1201.1839.jar')
     compile files('libs/MobCommons-2016.1201.1839.jar')
     compile 'cn.bmob.android:bmob-sdk:3.5.0'
-//    compile project(':pulltorefresh')
+    //    compile project(':pulltorefresh')
     compile files('libs/classes.jar')
     compile files('libs/GifView.jar')
     compile files('libs/xUtils-2.6.14.jar')
-//    compile project(':loopview')
+    //    compile project(':loopview')
 }

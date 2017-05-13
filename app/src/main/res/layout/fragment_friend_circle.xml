@@ -6,15 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/actionbar_top"/>
-    <com.cjj.MaterialRefreshLayout
-        android:id="@+id/materialRefreshLayout"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/commend_mrl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:isLoadMore="true">
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
         <include layout="@layout/empty_view"></include>
-    </com.cjj.MaterialRefreshLayout>
+    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

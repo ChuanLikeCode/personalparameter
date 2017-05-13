@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@drawable/back_shape">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="身高"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/title"/>
+
+    <com.zcdyy.personalparameter.views.LineChart
+        android:id="@+id/lineChart"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/tip"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="快点去设置数据吧~~"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:textColor="@color/colorDarkGray"-->
+        <!--android:textSize="@dimen/title"/>-->
+</LinearLayout>

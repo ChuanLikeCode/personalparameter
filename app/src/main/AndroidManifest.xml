@@ -67,7 +67,8 @@
         <activity
             android:name=".ui.activity.ReseivePasswordActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".ui.activity.HealthCircleDetailActivity"></activity>
+        <activity android:name=".ui.activity.HealthCircleDetailActivity" />
+        <activity android:name=".ui.activity.DataDetailActivity"></activity>
     </application>
 
 </manifest>

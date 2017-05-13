@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zcdyy.personalparameter.R;
-import com.zcdyy.personalparameter.bean.Comment;
 import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.listener.OnItemClickListener;

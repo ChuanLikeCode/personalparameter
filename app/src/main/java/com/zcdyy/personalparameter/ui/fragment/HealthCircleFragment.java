@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,23 +21,19 @@ import com.cjj.MaterialRefreshListener;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseFragment;
 import com.zcdyy.personalparameter.bean.HealthCircle;
-import com.zcdyy.personalparameter.bean.PraiseInfo;
-import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.listener.OnItemHealthCircleClick;
 import com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity;
 import com.zcdyy.personalparameter.ui.activity.PublishActivity;
 import com.zcdyy.personalparameter.ui.adapter.HealthCircleAdapter;
 import com.zcdyy.personalparameter.utils.BmobUtils;
-import com.zcdyy.personalparameter.utils.DataUtils;
 import com.zcdyy.personalparameter.utils.DividerItemDecoration;
 import com.zcdyy.personalparameter.utils.ToastUtils;
 import com.zcdyy.personalparameter.utils.Utils;
 import com.zcdyy.personalparameter.views.EmptyView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import cn.bmob.v3.BmobUser;
 
 
 /**
@@ -53,8 +50,8 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
     private HealthCircleAdapter adapter;
     private RecyclerView recyclerView;
     private EmptyView emptyView;
-    private DataUtils dataUtils;
-    private MaterialRefreshLayout materialRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+//    private MaterialRefreshLayout materialRefreshLayout;
     private ImageView ivZan;//点完之后要锁，防止用户多次点击
     private boolean isFirst = true;
     public Handler handler = new Handler() {
@@ -67,6 +64,7 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
                     List<HealthCircle> healthCircles = (List<HealthCircle>) bundle.getSerializable("list");
                     if (healthCircles != null){
                         list.clear();
+                        Collections.reverse(healthCircles);
                         list.addAll(healthCircles);
                     }
                     setData();
@@ -111,8 +109,13 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         }
         adapter.setList(list);
         adapter.notifyDataSetChanged();
-        materialRefreshLayout.finishRefreshLoadMore();
-        materialRefreshLayout.finishRefresh();
+        swipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+
+            }
+        }, 1000);
         if (isFirst){
             isFirst = false;
             dialog.dismiss();
@@ -132,9 +135,7 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
         dialog = ProgressDialog.show(getActivity(),null,"正在获取数据....");
         publish.setText("发布");
         title.setText("健康资讯");
-        dataUtils = new DataUtils();
         bmobUtils = new BmobUtils(getActivity());
-        bmobUtils.setDataUtils(dataUtils);
         publish.setVisibility(View.VISIBLE);
         adapter = new HealthCircleAdapter(getActivity(), list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -148,23 +149,12 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
     private HealthCircle healthCircle;
     private void bind() {
         Utils.findViewsById(view,R.id.top_rl_right).setOnClickListener(this);
-        materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
                 bmobUtils.queryFriendCircle(LIST_SUCCESS,handler);
-            }
-
-            @Override
-            public void onRefreshLoadMore(final MaterialRefreshLayout materialRefreshLayout) {
-                new Handler().postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        materialRefreshLayout.finishRefreshLoadMore();
-//                        materialRefreshLayout.finishRefresh();
-                    }
-                }, 1000);
             }
         });
         adapter.setOnItemClickListener(new OnItemHealthCircleClick() {
@@ -211,9 +201,11 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
 
 
     private void findViewsByIds(View view) {
+        swipeRefreshLayout = Utils.findViewsById(view, R.id.commend_mrl);
+        //设置加载图标的颜色
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorRed));
         emptyView = new EmptyView(view);
         title = Utils.findViewsById(view,R.id.top_tv_title);
-        materialRefreshLayout = Utils.findViewsById(view,R.id.materialRefreshLayout);
         publish = Utils.findViewsById(view,R.id.top_tv_right);
         recyclerView = Utils.findViewsById(view,R.id.recyclerView);
         Utils.findViewsById(view,R.id.top_rl_back).setVisibility(View.GONE);

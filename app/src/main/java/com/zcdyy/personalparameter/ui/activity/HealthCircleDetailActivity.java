@@ -1,10 +1,7 @@
 package com.zcdyy.personalparameter.ui.activity;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -23,7 +20,6 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseActivity;
-import com.zcdyy.personalparameter.bean.Comment;
 import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.HealthCircle;
 import com.zcdyy.personalparameter.bean.PraiseInfo;
@@ -32,7 +28,6 @@ import com.zcdyy.personalparameter.listener.OnItemClickListener;
 import com.zcdyy.personalparameter.ui.adapter.DianzanAdapter;
 import com.zcdyy.personalparameter.ui.adapter.SellerStateCommentAdapter;
 import com.zcdyy.personalparameter.utils.BmobUtils;
-import com.zcdyy.personalparameter.utils.DataUtils;
 import com.zcdyy.personalparameter.utils.ToastUtils;
 import com.zcdyy.personalparameter.views.CircleImageView;
 import com.zcdyy.personalparameter.views.EmptyView;
@@ -42,7 +37,6 @@ import com.zcdyy.personalparameter.views.WritePopwindows;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
@@ -85,7 +79,6 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
     private InputMethodManager imm;
 
     private BmobUtils bmobUtils;
-    private DataUtils dataUtils;
     private HealthCircle article;
 
     private SimpleDateFormat dateFormat;
@@ -257,9 +250,7 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
         article = (HealthCircle) getIntent().getSerializableExtra("circle");
         changData();//设置文章详情数据
         writePopwindows = new WritePopwindows(this,article);
-        dataUtils = new DataUtils();
         bmobUtils = new BmobUtils(this);
-        bmobUtils.setDataUtils(dataUtils);
         writePopwindows.setHandler(handler);
 //        bmobUtils.getHealthCircle(id,loginuser.getId(),1,handler);
         bmobUtils.getPraiseInfo(article.getObjectId(),3,handler);//获取点赞
