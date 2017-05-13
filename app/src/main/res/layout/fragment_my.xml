@@ -85,7 +85,7 @@
             android:layout_toRightOf="@id/iv_home"
             android:layout_marginLeft="16dp"
             android:textColor="@color/colorBlack"
-            android:text="个人主页"/>
+            android:text="健康参数详情"/>
 
         <ImageView
             android:layout_width="15dp"

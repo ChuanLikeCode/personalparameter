@@ -85,10 +85,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
             Intent intent;
             switch (v.getId()){
-//                case R.id.rl_homePage:
-//                    intent = new Intent(getActivity(), MyHomeActivity.class);
-//                    startActivity(intent);
-//                    break;
+                case R.id.rl_homePage://健康参数详情
+
+                    break;
 //                case R.id.rl_send:
 //                    intent = new Intent(getActivity(), SendActivity.class);
 //                    startActivity(intent);
