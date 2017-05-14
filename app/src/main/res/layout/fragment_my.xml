@@ -76,7 +76,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:src="@mipmap/homepage"/>
+            android:src="@mipmap/canshu"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,84 +98,83 @@
 
     <include layout="@layout/divide_line"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@color/colorWhite">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="16dp"-->
+        <!--android:background="@color/colorWhite">-->
 
-        <ImageView
-            android:id="@+id/iv_tongji"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/tongji"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_tongji"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:src="@mipmap/tongji"/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/title"
-            android:layout_toRightOf="@id/iv_tongji"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/colorBlack"
-            android:text="数据统计"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="@dimen/title"-->
+            <!--android:layout_toRightOf="@id/iv_tongji"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:textColor="@color/colorBlack"-->
+            <!--android:text="数据统计"/>-->
 
 
-        <TextView
-            android:id="@+id/tv_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10份"
-            android:textColor="@color/text_blue"
-            android:textStyle="bold"
-            android:textSize="@dimen/title"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+        <!--<TextView-->
+            <!--android:id="@+id/tv_data"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="10份"-->
+            <!--android:textColor="@color/text_blue"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textSize="@dimen/title"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"/>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
-    <include layout="@layout/divide_line"/>
+    <!--<include layout="@layout/divide_line"/>-->
 
-    <RelativeLayout
-        android:id="@+id/rl_send"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@color/colorWhite">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_send"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="16dp"-->
+        <!--android:background="@color/colorWhite">-->
 
-        <ImageView
-            android:id="@+id/iv_send"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/send"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_send"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:src="@mipmap/send"/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/title"
-            android:layout_toRightOf="@id/iv_send"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/colorBlack"
-            android:text="发送过的计划"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="@dimen/title"-->
+            <!--android:layout_toRightOf="@id/iv_send"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:textColor="@color/colorBlack"-->
+            <!--android:text="发送过的计划"/>-->
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/all_more_icon_03"
-            android:layout_alignParentRight="true"/>
+        <!--<ImageView-->
+            <!--android:layout_width="15dp"-->
+            <!--android:layout_height="15dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:src="@drawable/all_more_icon_03"-->
+            <!--android:layout_alignParentRight="true"/>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
-    <include layout="@layout/divide_line"/>
+    <!--<include layout="@layout/divide_line"/>-->
 
     <RelativeLayout
         android:id="@+id/rl_editInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:layout_marginTop="10dp"
         android:background="@color/colorWhite">
 
         <ImageView
@@ -183,7 +182,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:src="@mipmap/edit"/>
+            android:src="@mipmap/bianji"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -217,7 +216,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:src="@mipmap/reserve"/>
+            android:src="@mipmap/xiugaimima"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -239,37 +238,37 @@
 
     <include layout="@layout/divide_line"/>
 
-    <RelativeLayout
-        android:id="@+id/rl_sao"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@color/colorWhite">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_sao"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="16dp"-->
+        <!--android:background="@color/colorWhite">-->
 
-        <ImageView
-            android:id="@+id/iv_sao"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/scanner"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_sao"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:src="@mipmap/scanner"/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/title"
-            android:layout_toRightOf="@id/iv_sao"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/colorBlack"
-            android:text="扫一扫"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="@dimen/title"-->
+            <!--android:layout_toRightOf="@id/iv_sao"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:textColor="@color/colorBlack"-->
+            <!--android:text="扫一扫"/>-->
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/all_more_icon_03"
-            android:layout_alignParentRight="true"/>
+        <!--<ImageView-->
+            <!--android:layout_width="15dp"-->
+            <!--android:layout_height="15dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:src="@drawable/all_more_icon_03"-->
+            <!--android:layout_alignParentRight="true"/>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
-    <include layout="@layout/divide_line"/>
+    <!--<include layout="@layout/divide_line"/>-->
 </LinearLayout>

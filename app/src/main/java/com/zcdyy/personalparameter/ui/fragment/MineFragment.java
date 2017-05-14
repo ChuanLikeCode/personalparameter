@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseFragment;
 import com.zcdyy.personalparameter.bean.UserInfo;
+import com.zcdyy.personalparameter.ui.activity.KnowLedgeActivity;
 import com.zcdyy.personalparameter.ui.activity.ReseivePasswordActivity;
 import com.zcdyy.personalparameter.ui.activity.SettingActivity;
 import com.zcdyy.personalparameter.utils.Utils;
@@ -26,7 +27,7 @@ import com.zcdyy.personalparameter.views.CircleImageView;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
     private View view;
-    private RelativeLayout rl_homePage,rl_send,rl_editInfo,rl_reserve,rl_sao;
+    private RelativeLayout rl_homePage,rl_editInfo,rl_reserve;
     private CircleImageView head;
     private TextView name,phone,title;
     private ImageView sex;
@@ -42,10 +43,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private void findViewsByIds(View view) {
         rl_homePage = Utils.findViewsById(view,R.id.rl_homePage);
-        rl_send = Utils.findViewsById(view,R.id.rl_send);
+//        rl_send = Utils.findViewsById(view,R.id.rl_send);
         rl_editInfo = Utils.findViewsById(view,R.id.rl_editInfo);
         rl_reserve = Utils.findViewsById(view,R.id.rl_reserve);
-        rl_sao = Utils.findViewsById(view,R.id.rl_sao);
+//        rl_sao = Utils.findViewsById(view,R.id.rl_sao);
         head = Utils.findViewsById(view,R.id.head);
         name = Utils.findViewsById(view,R.id.name);
         phone = Utils.findViewsById(view,R.id.tv_phone);
@@ -73,9 +74,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private void bind() {
         rl_homePage.setOnClickListener(this);
         rl_editInfo.setOnClickListener(this);
-        rl_send.setOnClickListener(this);
+//        rl_send.setOnClickListener(this);
         rl_reserve.setOnClickListener(this);
-        rl_sao.setOnClickListener(this);
+//        rl_sao.setOnClickListener(this);
 
     }
 
@@ -86,7 +87,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             Intent intent;
             switch (v.getId()){
                 case R.id.rl_homePage://健康参数详情
-
+                    startActivity(new Intent(getActivity(), KnowLedgeActivity.class));
                     break;
 //                case R.id.rl_send:
 //                    intent = new Intent(getActivity(), SendActivity.class);

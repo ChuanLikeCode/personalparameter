@@ -12,6 +12,7 @@ import com.zcdyy.personalparameter.application.MyApplication;
 import com.zcdyy.personalparameter.bean.CommentInfo;
 import com.zcdyy.personalparameter.bean.DataInfo;
 import com.zcdyy.personalparameter.bean.HealthCircle;
+import com.zcdyy.personalparameter.bean.KnowLedge;
 import com.zcdyy.personalparameter.bean.PraiseInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.constant.Constants;
@@ -46,13 +47,59 @@ public class BmobUtils {
     private Context context;
     public static boolean userHead = false;
     private boolean registerSuccess = true;
-    /**
-     * 添加朋友
-     */
     private boolean cun = false;
     private UserInfo userInfo;
     public BmobUtils(Context context){
         this.context = context;
+    }
+
+    /**
+     * 删除人体参数
+     * @param dataInfo
+     * @param resultCode
+     * @param failedCode
+     * @param handler
+     */
+    public void deletePersonalData(DataInfo dataInfo,final int resultCode, final int failedCode, final Handler handler){
+        dataInfo.delete(dataInfo.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    Log.e("deletePersonalData", "ok");
+                    handler.sendEmptyMessage(resultCode);
+                } else {
+                    handler.sendEmptyMessage(failedCode);
+                    Log.e("deletePersonalData", e.getMessage());
+                }
+            }
+        });
+    }
+
+    /***
+     * 获取常识
+     * @param resultCode
+     * @param failedCode
+     * @param handler
+     */
+    public void getKnowLedge(final int resultCode, final int failedCode, final Handler handler){
+        BmobQuery<KnowLedge> query = new BmobQuery<>();
+        query.findObjects(new FindListener<KnowLedge>() {
+            @Override
+            public void done(List<KnowLedge> list, BmobException e) {
+                if (e == null) {
+                    Log.e("getKnowLedge", "ok");
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("list", (Serializable) list);
+                    message.what = resultCode;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } else {
+                    Log.e("getKnowLedge", e.getMessage());
+                    handler.sendEmptyMessage(failedCode);
+                }
+            }
+        });
     }
 
     /**
@@ -61,7 +108,7 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void saveCommentInfo(CommentInfo commentInfo, final int resultCode,int failedCode ,final Handler handler){
+    public void saveCommentInfo(CommentInfo commentInfo, final int resultCode, final int failedCode , final Handler handler){
         commentInfo.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -69,7 +116,8 @@ public class BmobUtils {
                     Log.e("saveCommentInfo", "ok");
                     handler.sendEmptyMessage(resultCode);
                 } else {
-                    Log.e("saveCommentInfo", "failed");
+                    handler.sendEmptyMessage(failedCode);
+                    Log.e("saveCommentInfo", e.getMessage());
                 }
             }
         });
@@ -486,16 +534,19 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void queryFriendCircle( final int resultCode, final Handler handler){
+    public void queryFriendCircle(final int resultCode, final Handler handler){
 
         BmobQuery<HealthCircle> query = new BmobQuery<>();
-        query.order("-createAt");
+//        query.order("createAt");
+//        query.setLimit(5);
+//        query.setSkip(skip);
         query.include("auther");// 希望在查询帖子信息的同时也把发布人的信息查询出来
         query.findObjects(new FindListener<HealthCircle>() {
             @Override
             public void done(List<HealthCircle> list, BmobException e) {
                 if (e==null){
                     Log.e("queryFriendCircle","ok");
+                    Collections.reverse(list);
                     Message message = new Message();
                     Bundle bundle = new Bundle();
                     message.what =resultCode;

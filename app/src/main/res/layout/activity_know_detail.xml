@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_know_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    tools:context="com.zcdyy.personalparameter.ui.activity.KnowDetailActivity">
+
+    <include layout="@layout/actionbar_top"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/title"
+                android:text="血脂"/>
+            <TextView
+                android:id="@+id/shihe"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/title"
+                android:text="合适水平：≤5.17mmol/L（200mg/dL）"/>
+            <TextView
+                android:id="@+id/shenggao"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/title"
+                android:text="升高：≥5.69mmol/L（220mg/dL"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/lingjie"
+                android:lineSpacingExtra="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/title"
+                android:text="临界范围：5.20～5.66mmol/L（201～219mg/dL）"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/jigao"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/title"
+                android:text="极高：≥5.64mmol/L（500mg/dL）"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/content"
+                android:layout_marginTop="5dp"
+                android:lineSpacingExtra="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/title"
+                android:text="临床意义：升高：CHO升高的危害：容易引起动脉粥样硬化性心、脑血管疾病如：冠心病、心肌梗死、脑卒中（中风）
+等。CHO升高的疾病：各种高脂蛋白血症、梗阻性黄疸、肾病综合征、甲状腺功能低下、慢性肾功能衰竭、糖尿病等。导致CHO升高的生理因素：高脂饮食、吸烟、饮酒、紧张、血液浓缩。妊娠末三个月时可能明显升高，产后可恢复。降低：CHO降低可见于各种脂蛋白缺陷状态、肝硬化、恶性
+肿瘤、营养吸收不良、巨细胞性贫血等。女性月经期也可降低。"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

@@ -73,6 +73,13 @@ public class PersonalDataFragment extends BaseFragment implements View.OnClickLi
                     setData();
                     dialog.dismiss();
                     break;
+                case 4:
+                    bmobUtils.getDataInfo(loginuser.getId(),1,handler);
+                    ToastUtils.shortToast(getActivity(),"删除成功");
+                    break;
+                case 404:
+                    ToastUtils.shortToast(getActivity(),"网络错误，请稍后再试");
+                    break;
             }
         }
     };
@@ -151,6 +158,7 @@ public class PersonalDataFragment extends BaseFragment implements View.OnClickLi
         bmobUtils = new BmobUtils(getActivity());
         bmobUtils.getDataInfo(loginuser.getId(),1,handler);
         adapter = new ParaAdapter(getActivity(),list);
+        adapter.setHandler(handler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         DividerItemDecoration decoration = new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST);
         decoration.setDivider(R.drawable.divider_shape);

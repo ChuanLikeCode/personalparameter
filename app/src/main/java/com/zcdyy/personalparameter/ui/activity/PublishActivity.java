@@ -36,7 +36,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private TextView title,publish;
     private EditText content;
     public ImageView img;
-
     private String[] items = {"拍照", "我的相册"};
     // 头像文件、上传头像的名称、本地图片uri
     private File imageFile;
@@ -51,6 +50,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
     private BmobUtils bmobUtils;
     public boolean isPic = false;
+    private ImageView delete;
     public HealthCircle healthCircle;
     public Handler handler = new Handler(){
         @Override
@@ -62,6 +62,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     finish();
                     break;
                 case Constants.ResultCode.UPLOAD_SUCCESS:
+                    delete.setVisibility(View.VISIBLE);
                     dialog.dismiss();
                     break;
             }
@@ -74,6 +75,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         publish.setVisibility(View.VISIBLE);
         content = findViewsById(R.id.content);
         img = findViewsById(R.id.img);
+        delete = findViewsById(R.id.delete);
     }
 
 
@@ -88,6 +90,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
     private void bind() {
         img.setOnClickListener(this);
+        delete.setOnClickListener(this);
         findViewsById(R.id.top_rl_right).setOnClickListener(this);
     }
 
@@ -107,6 +110,12 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             case R.id.top_rl_right:
                 publishFriend();
 
+                break;
+            case R.id.delete:
+                img.setImageResource(R.drawable.chat_zx_icon1_03);
+                delete.setVisibility(View.GONE);
+                isPic = false;
+                healthCircle.setImg(null);
                 break;
         }
     }

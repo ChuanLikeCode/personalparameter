@@ -68,7 +68,9 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ui.activity.HealthCircleDetailActivity" />
         <activity android:name=".ui.activity.DataDetailActivity" />
-        <activity android:name=".ui.activity.ShowImageActivity"></activity>
+        <activity android:name=".ui.activity.ShowImageActivity" />
+        <activity android:name=".ui.activity.KnowLedgeActivity" />
+        <activity android:name=".ui.activity.KnowDetailActivity"></activity>
     </application>
 
 </manifest>

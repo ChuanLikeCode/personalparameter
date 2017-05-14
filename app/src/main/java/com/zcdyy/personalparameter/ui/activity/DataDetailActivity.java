@@ -124,6 +124,9 @@ public class DataDetailActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void onClick(View v) {
                         List<ChartEntity> list = dataInfo.getData();
+                        for (int i = position+1;i<list.size();i++){
+                            list.get(i).setxLabel((Integer.valueOf(list.get(i).getxLabel())-1)+"");
+                        }
                         list.remove(position);
                         dataInfo.setData(list);
                         if (list.size()==0){

@@ -74,7 +74,7 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
         holder.timeStr.setText(list.get(position).getCreatedAt());
         holder.commentCount.setText(""+list.get(position).getCommentCount()+"");
         holder.zanCount.setText(""+list.get(position).getPraiseCount()+"");
-        Log.e("pic",list.get(position).isPic()+"");
+//        Log.e("pic",list.get(position).isPic()+"");
         if (list.get(position).isPic()){
             holder.img.setVisibility(View.VISIBLE);
             Glide.with(context).load(list.get(position).getImg().getFileUrl())

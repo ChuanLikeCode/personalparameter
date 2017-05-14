@@ -53,9 +53,14 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
     private RecyclerView recyclerView;
     private EmptyView emptyView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean isRequest = true;
 //    private MaterialRefreshLayout materialRefreshLayout;
     private ImageView ivZan;//点完之后要锁，防止用户多次点击
     private boolean isFirst = true;
+    //最后一个可见的item的位置
+    private int lastVisibleItemPosition;
+    private int skip = 0;
+    private List<HealthCircle> listAll = new ArrayList<>();
     public Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,9 +70,7 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
                     Bundle bundle = msg.getData();
                     List<HealthCircle> healthCircles = (List<HealthCircle>) bundle.getSerializable("list");
                     if (healthCircles != null){
-                        list.clear();
-                        Collections.reverse(healthCircles);
-                        list.addAll(healthCircles);
+                        listAll.addAll(healthCircles);
                     }
                     setData();
                     break;
@@ -92,18 +95,27 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
 
 
     };
-
-    private void setDianzan() {
-
+    /**
+     * 设置分页数据
+     */
+    private void addData(){
+//        Log.e("skip",skip+"");
+//        Log.e("listAll",listAll.size()+"");
+        for (int i = skip;i < skip+5 ;i++){
+            if (i < listAll.size()){
+                list.add(listAll.get(i));
+            }else {
+                isRequest = false;
+            }
+        }
     }
-
 
     /**
      * 添加数据
      */
     private void setData() {
         //判断如果没有数据的话，则显示空提示
-//        Log.e("list",list.size()+"");
+        addData();
         if (list.size() == 0) {
             emptyView.setNotify("暂无动态");
         } else {
@@ -156,6 +168,10 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
+                list.clear();
+                listAll.clear();
+                skip = 0;
+                isRequest = true;
                 bmobUtils.queryFriendCircle(LIST_SUCCESS,handler);
             }
         });
@@ -207,6 +223,36 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
             }
 
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                if (visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPosition == totalItemCount - 1) {
+//                    if (mAdapter.getCount() >= mPageSize)
+//                        beginFooterRefreshing();
+                    if (isRequest){
+                        skip += 5;
+                        setData();
+//                        bmobUtils.queryFriendCircle(LIST_SUCCESS,handler);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+
+                lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+
+            }
+        });
+
     }
 
     @Override
@@ -241,6 +287,8 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case 456:
+                list.clear();
+                skip = 0;
                 bmobUtils.queryFriendCircle(LIST_SUCCESS, handler);
                 break;
         }
