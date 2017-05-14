@@ -1,54 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_show_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="#000000"
 
+    tools:context="com.zcdyy.personalparameter.ui.activity.ShowImageActivity">
 
-
-    <Button
-        android:id="@+id/activity_showimage_fenxiang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="86dp"
-        android:text="分享"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/activity_showimage_baocun"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="保存"
-        android:visibility="gone" />
-
-    <!--<ScrollView-->
-    <!--android:id="@+id/scrollView1"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--android:layout_below="@+id/activity_showimage_fenxiang"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentStart="true">-->
-
-    <LinearLayout
-        android:id="@+id/activity_showimage_neirong"
+    <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:transitionName="transition_morph_view"
+        android:onClick="backClick">
+        <com.zcdyy.personalparameter.utils.imageprogress.ProgressImageView
+            android:id="@+id/progress_imageview"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
-    </LinearLayout>
-    <!--</ScrollView>-->
-    <ImageButton
-        android:id="@+id/activity_showimage_fanhui"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="26dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/label_next_page_normal_night" />
+
 </RelativeLayout>

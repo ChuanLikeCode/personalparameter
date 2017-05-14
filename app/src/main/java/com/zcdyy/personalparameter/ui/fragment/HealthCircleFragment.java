@@ -1,6 +1,7 @@
 package com.zcdyy.personalparameter.ui.fragment;
 
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.zcdyy.personalparameter.bean.HealthCircle;
 import com.zcdyy.personalparameter.listener.OnItemHealthCircleClick;
 import com.zcdyy.personalparameter.ui.activity.HealthCircleDetailActivity;
 import com.zcdyy.personalparameter.ui.activity.PublishActivity;
+import com.zcdyy.personalparameter.ui.activity.ShowImageActivity;
 import com.zcdyy.personalparameter.ui.adapter.HealthCircleAdapter;
 import com.zcdyy.personalparameter.utils.BmobUtils;
 import com.zcdyy.personalparameter.utils.DividerItemDecoration;
@@ -196,9 +198,22 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
                 startActivityForResult(intent,456);
             }
 
+            @Override
+            public void onImgClick(ImageView img, int position) {
+                Intent intent = new Intent(getActivity(), ShowImageActivity.class);
+                getActivity().overridePendingTransition(R.anim.anim_show, R.anim.anim_dismiss);
+                intent.putExtra("path",list.get(position).getImg().getFileUrl());
+                startActivity(intent);
+            }
+
         });
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().overridePendingTransition(R.anim.anim_show, R.anim.anim_dismiss);
+    }
 
     private void findViewsByIds(View view) {
         swipeRefreshLayout = Utils.findViewsById(view, R.id.commend_mrl);

@@ -60,7 +60,6 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".permission.PermissionsActivity" />
         <activity android:name=".ui.activity.PublishActivity" />
-        <activity android:name=".views.showimage.ShowImageActivity" />
         <activity
             android:name=".ui.activity.SettingActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -68,7 +67,8 @@
             android:name=".ui.activity.ReseivePasswordActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ui.activity.HealthCircleDetailActivity" />
-        <activity android:name=".ui.activity.DataDetailActivity"></activity>
+        <activity android:name=".ui.activity.DataDetailActivity" />
+        <activity android:name=".ui.activity.ShowImageActivity"></activity>
     </application>
 
 </manifest>

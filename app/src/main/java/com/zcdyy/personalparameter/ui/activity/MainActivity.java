@@ -71,6 +71,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.overridePendingTransition(R.anim.anim_show, R.anim.anim_dismiss);
+    }
+
     private void bind() {
         //底部导航栏三个控件的监听事件
         for(int i = 0;i<3;i++){

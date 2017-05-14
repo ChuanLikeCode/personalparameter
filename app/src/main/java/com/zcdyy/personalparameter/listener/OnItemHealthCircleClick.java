@@ -4,7 +4,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zcdyy.personalparameter.views.showimage.MyImageView;
 
 
 /**
@@ -14,5 +13,5 @@ import com.zcdyy.personalparameter.views.showimage.MyImageView;
 public interface OnItemHealthCircleClick {
     void onPraiseClick(ImageView praise, TextView count,int position);
     void onItemClick(int position);
-//    void onImgClick(ImageView img, int position);
+    void onImgClick(ImageView img, int position);
 }

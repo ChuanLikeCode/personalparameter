@@ -239,6 +239,7 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
         });
     }
     private void initData() {
+        title.setText("详情");
         dialog = ProgressDialog.show(this,null,"加载数据....");
         dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
         loginuser = BmobUser.getCurrentUser(UserInfo.class);
@@ -313,6 +314,11 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
                     addCommentData();//增加评论列表数据
                     ToastUtils.shortToast(HealthCircleDetailActivity.this,"评论成功");
                     break;
+                case 404:
+                    dianzan.setClickable(true);
+                    writePopwindows.dianzan1.setClickable(true);
+                    ToastUtils.shortToast(HealthCircleDetailActivity.this,"网络错误，请稍后重试");
+                    break;
             }
         }
 
@@ -385,14 +391,15 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
      * 评论列表
      */
     private void changeCommentData() {
-        //判断如果没有数据的话，则显示空提示
-        Log.e("changeCommentData",dianzanOrCommment+"");
-        if (commentList.size() == 0) {
-            emptyView.setNotify("暂无评论");
-        } else {
-            emptyView.setEmptyViewGone();
-        }
+
         if (!dianzanOrCommment){
+            //判断如果没有数据的话，则显示空提示
+//            Log.e("changeCommentData",dianzanOrCommment+"");
+            if (commentList.size() == 0) {
+                emptyView.setNotify("暂无评论");
+            } else {
+                emptyView.setEmptyViewGone();
+            }
             recyclerView.setAdapter(commentAdapter);
             commentAdapter.addList(commentList);
             commentAdapter.notifyDataSetChanged();
@@ -405,13 +412,14 @@ public class HealthCircleDetailActivity extends BaseActivity implements View.OnC
      * 点赞列表
      */
     private void changDianData() {
-        //判断如果没有数据的话，则显示空提示
-        if (dianzanList.size() == 0) {
-            emptyView.setNotify("暂无点赞");
-        } else {
-            emptyView.setEmptyViewGone();
-        }
+
         if (dianzanOrCommment){
+            //判断如果没有数据的话，则显示空提示
+            if (dianzanList.size() == 0) {
+                emptyView.setNotify("暂无点赞");
+            } else {
+                emptyView.setEmptyViewGone();
+            }
             recyclerView.setAdapter(dianzanAdapter);
             dianzanAdapter.addList(dianzanList);
             dianzanAdapter.notifyDataSetChanged();

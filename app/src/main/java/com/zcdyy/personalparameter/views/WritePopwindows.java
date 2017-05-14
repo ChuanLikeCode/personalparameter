@@ -157,7 +157,7 @@ public class WritePopwindows extends PopupWindow{
             commentInfo.setCircle(circle);
             UserInfo info = BmobUser.getCurrentUser(UserInfo.class);
             commentInfo.setUser(info);
-            bmobUtils.saveCommentInfo(commentInfo,888,handler);
+            bmobUtils.saveCommentInfo(commentInfo,888,404,handler);
             ((HealthCircleDetailActivity)context).comment.setClickable(false);
         }else {
             ToastUtils.shortToast(context,"请输入评论");

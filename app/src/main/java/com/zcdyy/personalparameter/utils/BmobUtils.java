@@ -61,7 +61,7 @@ public class BmobUtils {
      * @param resultCode
      * @param handler
      */
-    public void saveCommentInfo(CommentInfo commentInfo, final int resultCode, final Handler handler){
+    public void saveCommentInfo(CommentInfo commentInfo, final int resultCode,int failedCode ,final Handler handler){
         commentInfo.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {

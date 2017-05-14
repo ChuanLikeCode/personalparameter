@@ -137,6 +137,9 @@ public class HealthCircleAdapter extends RecyclerView.Adapter<HealthCircleAdapte
                     case R.id.iv_zan:
                         onItemClickListener.onPraiseClick(iv_zan,zanCount,getAdapterPosition());
                         break;
+                    case R.id.img:
+                        onItemClickListener.onImgClick(img,getAdapterPosition());
+                        break;
                 }
             }
         }
