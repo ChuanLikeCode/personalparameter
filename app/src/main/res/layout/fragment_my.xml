@@ -238,37 +238,71 @@
 
     <include layout="@layout/divide_line"/>
 
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/rl_sao"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="16dp"-->
-        <!--android:background="@color/colorWhite">-->
+    <RelativeLayout
+        android:id="@+id/rl_sao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/colorWhite">
 
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_sao"-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:src="@mipmap/scanner"/>-->
+        <ImageView
+            android:id="@+id/iv_sao"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/tuisong"/>
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="@dimen/title"-->
-            <!--android:layout_toRightOf="@id/iv_sao"-->
-            <!--android:layout_marginLeft="16dp"-->
-            <!--android:textColor="@color/colorBlack"-->
-            <!--android:text="扫一扫"/>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/title"
+            android:layout_toRightOf="@id/iv_sao"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/colorBlack"
+            android:text="资讯推送"/>
 
-        <!--<ImageView-->
-            <!--android:layout_width="15dp"-->
-            <!--android:layout_height="15dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:src="@drawable/all_more_icon_03"-->
-            <!--android:layout_alignParentRight="true"/>-->
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/all_more_icon_03"
+            android:layout_alignParentRight="true"/>
 
-    <!--</RelativeLayout>-->
+    </RelativeLayout>
 
-    <!--<include layout="@layout/divide_line"/>-->
+    <include layout="@layout/divide_line"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/colorWhite">
+
+        <ImageView
+            android:id="@+id/iv_send"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/yijian"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/title"
+            android:layout_toRightOf="@id/iv_send"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/colorBlack"
+            android:text="意见反馈"/>
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/all_more_icon_03"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <include layout="@layout/divide_line"/>
 </LinearLayout>

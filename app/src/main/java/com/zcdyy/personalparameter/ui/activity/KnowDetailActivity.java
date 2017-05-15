@@ -1,6 +1,5 @@
 package com.zcdyy.personalparameter.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -46,5 +45,6 @@ public class KnowDetailActivity extends BaseActivity {
             jigao.setText(knowLedge.getJigao());
             jigao.setVisibility(View.VISIBLE);
         }
+        content.setText(knowLedge.getContent());
     }
 }

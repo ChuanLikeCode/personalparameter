@@ -289,6 +289,7 @@ public class HealthCircleFragment extends BaseFragment implements View.OnClickLi
             case 456:
                 list.clear();
                 skip = 0;
+                listAll.clear();
                 bmobUtils.queryFriendCircle(LIST_SUCCESS, handler);
                 break;
         }

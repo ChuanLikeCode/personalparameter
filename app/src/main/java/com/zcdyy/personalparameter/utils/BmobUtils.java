@@ -1,7 +1,6 @@
 package com.zcdyy.personalparameter.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,15 +14,15 @@ import com.zcdyy.personalparameter.bean.HealthCircle;
 import com.zcdyy.personalparameter.bean.KnowLedge;
 import com.zcdyy.personalparameter.bean.PraiseInfo;
 import com.zcdyy.personalparameter.bean.UserInfo;
+import com.zcdyy.personalparameter.bean.YiJian;
+import com.zcdyy.personalparameter.bean.ZiXun;
 import com.zcdyy.personalparameter.constant.Constants;
 import com.zcdyy.personalparameter.ui.activity.EditMyInfoActivity;
-import com.zcdyy.personalparameter.ui.activity.LoginActivity;
 import com.zcdyy.personalparameter.ui.activity.PublishActivity;
 import com.zcdyy.personalparameter.ui.activity.RegisterActivity;
 import com.zcdyy.personalparameter.ui.activity.SettingActivity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,6 +50,62 @@ public class BmobUtils {
     private UserInfo userInfo;
     public BmobUtils(Context context){
         this.context = context;
+    }
+
+    /**
+     * 获取推送资讯
+     * @param resultCode
+     * @param failedCode
+     * @param handler
+     */
+    public void getZiXun(String id,final int resultCode, final int failedCode, final Handler handler){
+        BmobQuery<ZiXun> query = new BmobQuery<>();
+        query.addWhereEqualTo("userId",id);
+        query.findObjects(new FindListener<ZiXun>() {
+            @Override
+            public void done(List<ZiXun> list, BmobException e) {
+                if (e == null) {
+                    Log.e("getYijian", "ok");
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("list", (Serializable) list);
+                    message.what = resultCode;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } else {
+                    Log.e("getYijian", e.getMessage());
+                    handler.sendEmptyMessage(failedCode);
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取意见反馈
+     * @param resultCode
+     * @param failedCode
+     * @param handler
+     */
+    public void getYijian(String id,final int resultCode, final int failedCode, final Handler handler){
+        BmobQuery<YiJian> query = new BmobQuery<>();
+        query.addWhereEqualTo("userId",id);
+        query.findObjects(new FindListener<YiJian>() {
+            @Override
+            public void done(List<YiJian> list, BmobException e) {
+                if (e == null) {
+                    Log.e("getYijian", "ok");
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("list", (Serializable) list);
+                    message.what = resultCode;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } else {
+                    Log.e("getYijian", e.getMessage());
+                    handler.sendEmptyMessage(failedCode);
+                }
+            }
+        });
     }
 
     /**
