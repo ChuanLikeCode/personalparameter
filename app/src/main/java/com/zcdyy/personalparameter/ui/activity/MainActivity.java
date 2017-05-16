@@ -36,9 +36,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private int[] iv_tab_ids = {R.id.actionBar_iv_bottom1,R.id.actionBar_iv_bottom2,R.id.actionBar_iv_bottom3};
     private int[] tab_ids = {R.id.bottom_tab_1,R.id.bottom_tab_2,R.id.bottom_tab_3};
     //未选中
-    private int[]tab_unSelect ={R.drawable.footer_care_icon1,R.drawable.footer_news_icon1,R.drawable.footer_my_icon1};
+    private int[]tab_unSelect ={R.mipmap.dongtai,R.mipmap.data,R.drawable.footer_my_icon1};
     //选中
-    private int[]tab_Select ={R.drawable.footer_care_icon2,R.drawable.footer_news_icon2,R.drawable.footer_my_icon2};
+    private int[]tab_Select ={R.mipmap.dongtai_select,R.mipmap.data_select,R.drawable.footer_my_icon2};
     //初始化三个控件的状态
     private boolean[] selected={true,false,false};
 

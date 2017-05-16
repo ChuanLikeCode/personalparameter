@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">人体检测</string>
+    <string name="app_name">健康数据</string>
 
     <!--权限设置-->
     <string name="permission">权限(permission)</string>

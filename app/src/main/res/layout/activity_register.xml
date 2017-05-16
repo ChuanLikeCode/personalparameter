@@ -4,7 +4,7 @@
     android:id="@+id/activity_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_show"
+    android:background="@mipmap/loginshow"
     android:orientation="vertical"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
@@ -75,7 +75,6 @@
             android:textSize="14sp" />
 
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -89,36 +88,7 @@
             android:layout_gravity="left|center_vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="验证码"
-            android:textColor="@color/colorWhite"
-            android:textSize="13sp" />
-
-        <EditText
-            android:id="@+id/testcode"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingRight="10dp"
-            android:text=""
-            android:textColor="@color/colorWhite"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="密码"
+            android:text="密码:"
             android:textColor="@color/colorWhite"
             android:textSize="13sp" />
 
@@ -134,6 +104,36 @@
             android:textColor="@color/colorWhite"
             android:textSize="13sp" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="验证码:"
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/testcode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingRight="10dp"
+            android:text=""
+            android:textColor="@color/colorWhite"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+
 
     <Button
         android:id="@+id/registerbtn"

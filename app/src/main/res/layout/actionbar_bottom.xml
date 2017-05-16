@@ -25,7 +25,7 @@
                 android:id="@+id/actionBar_iv_bottom1"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/footer_care_icon2"/>
+                android:src="@mipmap/dongtai_select"/>
         </LinearLayout>
 
         <LinearLayout
@@ -42,7 +42,7 @@
                 android:id="@+id/actionBar_iv_bottom2"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/footer_news_icon1"/>
+                android:src="@mipmap/data"/>
         </LinearLayout>
 
         <LinearLayout

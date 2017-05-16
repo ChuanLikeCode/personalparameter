@@ -2,6 +2,7 @@ package com.zcdyy.personalparameter.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class YiJianAdapter extends RecyclerView.Adapter<YiJianAdapter.MyViewHold
 
     public YiJianAdapter(Context context,int type) {
         this.context = context;
+        this.type = type;
     }
 
     @Override
@@ -53,17 +55,22 @@ public class YiJianAdapter extends RecyclerView.Adapter<YiJianAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        if (type ==0){
+        if (type ==0){//意见反馈
             holder.question.setText(yiJianList.get(position).getQuestion());
             if (yiJianList.get(position).getAnswer()!=null){
                 holder.answer.setText(yiJianList.get(position).getAnswer());
+            }else {
+                holder.answer.setText("请耐心等待客服回复哟~~~");
             }
         }else {
             holder.question.setText(ziXunList.get(position).getTitle());
             holder.answer.setText(ziXunList.get(position).getContent());
             if (ziXunList.get(position).getImg()!=null){
+                holder.img.setVisibility(View.VISIBLE);
                 Glide.with(context).load(ziXunList.get(position).getImg().getFileUrl())
                         .error(R.drawable.chat_xe_icon2_03).into(holder.img);
+            }else {
+                holder.img.setVisibility(View.GONE);
             }
         }
 

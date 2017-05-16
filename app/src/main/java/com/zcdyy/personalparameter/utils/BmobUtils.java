@@ -53,19 +53,41 @@ public class BmobUtils {
     }
 
     /**
+     * 保存意见反馈
+     * @param yiJian
+     * @param resultCode
+     * @param failedCode
+     * @param handler
+     */
+    public void saveYiJian(YiJian yiJian,final int resultCode, final int failedCode, final Handler handler){
+        yiJian.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null) {
+                    Log.e("saveYiJian", "ok");
+                    handler.sendEmptyMessage(resultCode);
+                } else {
+                    handler.sendEmptyMessage(failedCode);
+                    Log.e("saveYiJian", e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
      * 获取推送资讯
      * @param resultCode
      * @param failedCode
      * @param handler
      */
-    public void getZiXun(String id,final int resultCode, final int failedCode, final Handler handler){
+    public void getZiXun(final int resultCode, final int failedCode, final Handler handler){
         BmobQuery<ZiXun> query = new BmobQuery<>();
-        query.addWhereEqualTo("userId",id);
         query.findObjects(new FindListener<ZiXun>() {
             @Override
             public void done(List<ZiXun> list, BmobException e) {
                 if (e == null) {
-                    Log.e("getYijian", "ok");
+                    Log.e("getZiXun", "ok");
+                    Collections.reverse(list);
                     Message message = new Message();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("list", (Serializable) list);
@@ -73,7 +95,7 @@ public class BmobUtils {
                     message.setData(bundle);
                     handler.sendMessage(message);
                 } else {
-                    Log.e("getYijian", e.getMessage());
+                    Log.e("getZiXun", e.getMessage());
                     handler.sendEmptyMessage(failedCode);
                 }
             }
@@ -94,6 +116,7 @@ public class BmobUtils {
             public void done(List<YiJian> list, BmobException e) {
                 if (e == null) {
                     Log.e("getYijian", "ok");
+                    Collections.reverse(list);
                     Message message = new Message();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("list", (Serializable) list);
