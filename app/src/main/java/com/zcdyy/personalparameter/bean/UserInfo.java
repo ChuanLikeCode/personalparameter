@@ -20,7 +20,15 @@ public class UserInfo extends BmobUser implements Serializable{
     private String height;//用户身高
     private String weight;//用户体重
     private boolean newInfo;//是否编辑过信息
+    private boolean isLogin;//是否编辑过信息
 
+    public boolean isLogin() {
+        return isLogin;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
 //    @Override
 //    public String getUsername() {
 //        return username;

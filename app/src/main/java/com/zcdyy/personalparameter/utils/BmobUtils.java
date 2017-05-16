@@ -53,6 +53,28 @@ public class BmobUtils {
     }
 
     /**
+     * 删除动态
+     * @param healthCircle
+     * @param resultCode
+     * @param failedCode
+     * @param handler
+     */
+    public void deleteHealthCircle(HealthCircle healthCircle,final int resultCode, final int failedCode, final Handler handler){
+        healthCircle.delete(healthCircle.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    Log.e("deleteHealthCircle", "ok");
+                    handler.sendEmptyMessage(resultCode);
+                } else {
+                    handler.sendEmptyMessage(failedCode);
+                    Log.e("deleteHealthCircle", e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
      * 保存意见反馈
      * @param yiJian
      * @param resultCode
@@ -301,6 +323,7 @@ public class BmobUtils {
                 if (e==null){
                     Log.e("queryAccount", "ok");
                     UserInfo userInfo1 = BmobUser.getCurrentUser(UserInfo.class);
+                    userInfo1.setLogin(true);
                     MyApplication.getInstance().saveUserInfo(userInfo1);
                     handler.sendEmptyMessage(resultCode);
                 }else {
@@ -314,47 +337,62 @@ public class BmobUtils {
     /**
  * 找回密码
  */
-    public void getBackYourAccount(final String phone, final String userPassword){
-        final BmobQuery<UserInfo> query = new BmobQuery<>();
-        query.findObjects(new FindListener<UserInfo>() {
+    private boolean has = false;
+    public void getBackYourAccount(final String userPhone, final String userPassword){
+
+//        UserInfo userInfo = BmobUser.getCurrentUser(UserInfo.class);
+//        userInfo.setPassword(userPassword);
+//        userInfo.update(userInfo.getObjectId(), new UpdateListener() {
+//            @Override
+//            public void done(BmobException e) {
+//                if (e==null){
+//                    Log.e("getBackYourAccount", "ok");
+//                    ((RegisterActivity) context).handler.sendEmptyMessage(Constants.ResultCode.SUCCESS);
+//                }else {
+//                    ((RegisterActivity) context).handler.sendEmptyMessage(222);
+//                    Log.e("getBackYourAccount", e.getMessage());
+//                }
+//
+//            }
+//        });
+        final BmobQuery<BmobUser> query = new BmobQuery<>();
+        query.findObjects(new FindListener<BmobUser>() {
             @Override
-            public void done(List<UserInfo> list, BmobException e) {
+            public void done(List<BmobUser> list, BmobException e) {
                 if (e == null){
                     Log.e("getBackYourAccount", "ok");
-                    for (UserInfo a :
+                    for (BmobUser a :
                             list) {
-                        if (a.getUsername().equals(phone)){
+                        Log.e("username",a.getUsername());
+                        if (a.getUsername().equals(userPhone)){
                             a.setPassword(userPassword);
-                            findPassword(a);
+                            has = true;
+                            Log.e("setPassword",a.getObjectId());
+                            a.update(a.getObjectId(), new UpdateListener() {
+                               @Override
+                               public void done(BmobException e) {
+                                   if (e==null){
+                                       ((RegisterActivity) context).handler.sendEmptyMessage(Constants.ResultCode.SUCCESS);
+                                       Log.e("update", "ok");
+                                   }else {
+                                       Log.e("update", e.getMessage());
+                                   }
+                                }
+                           });
                             break;
                         }
                     }
                 }else {
+//                    ((RegisterActivity) context).handler.sendEmptyMessage(222);
                     Log.e("getBackYourAccount", e.getMessage());
+                }
+                if (!has){
+                    ((RegisterActivity) context).handler.sendEmptyMessage(222);
                 }
             }
         });
     }
 
-    /**
-     * 更新用户密码
-     *
-     * @param account
-     */
-    public void findPassword(UserInfo account) {
-        account.update(account.getId(), new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if (e == null) {
-                    Log.e("updateAccountInfo", "ok");
-                    ((RegisterActivity) context).handler.sendEmptyMessage(Constants.ResultCode.SUCCESS);
-                } else {
-                    e.printStackTrace();
-                    Log.e("updateAccountInfo", e.getMessage());
-                }
-            }
-        });
-    }
 
     /**
      * 上传图片文件--注册时默认的用户头像
@@ -388,8 +426,8 @@ public class BmobUtils {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null){
-                    ((RegisterActivity) context).account.setId(s);
-                    updateInfo(((RegisterActivity) context).account);
+//                    ((RegisterActivity) context).account.setId(s);
+//                    updateInfo(((RegisterActivity) context).account);
                     ((RegisterActivity) context).handler.sendEmptyMessage(Constants.ResultCode.SUCCESS);
                 }else {
                     Log.e("Bmob-updateInfoFailed", e.getMessage());
@@ -403,14 +441,14 @@ public class BmobUtils {
      * @param userPhone 账号
      */
     public void registerChecked(final String userPhone) {
-        BmobQuery<UserInfo> query = new BmobQuery<>();
-        query.findObjects(new FindListener<UserInfo>() {
+        BmobQuery<BmobUser> query = new BmobQuery<>();
+        query.findObjects(new FindListener<BmobUser>() {
             @Override
-            public void done(List<UserInfo> list, BmobException e) {
+            public void done(List<BmobUser> list, BmobException e) {
                 if (e == null){
                     Log.e("list",list+"");
                     Log.e("registerChecked","ok");
-                    for (UserInfo a :
+                    for (BmobUser a :
                             list) {
                         if (a.getUsername().equals(userPhone)) {
                             registerSuccess = false;
@@ -436,13 +474,14 @@ public class BmobUtils {
      * 更新用户信息
      * @param userInfo
      */
-    public void updateInfo(UserInfo userInfo){
-        BmobUser userInfo1 = BmobUser.getCurrentUser();
-        userInfo.update(userInfo1.getObjectId(),new UpdateListener() {
+    public void updateInfo(UserInfo userInfo, final int resultCode, final Handler handler){
+
+        userInfo.update(userInfo.getObjectId(),new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e==null){
                     Log.e("updateInfo","ok");
+                    handler.sendEmptyMessage(resultCode);
                 }else {
                     Log.e("updateInfo",e.getMessage());
                 }
@@ -615,9 +654,35 @@ public class BmobUtils {
     public void queryFriendCircle(final int resultCode, final Handler handler){
 
         BmobQuery<HealthCircle> query = new BmobQuery<>();
-//        query.order("createAt");
-//        query.setLimit(5);
-//        query.setSkip(skip);
+        query.include("auther");// 希望在查询帖子信息的同时也把发布人的信息查询出来
+        query.findObjects(new FindListener<HealthCircle>() {
+            @Override
+            public void done(List<HealthCircle> list, BmobException e) {
+                if (e==null){
+                    Log.e("queryFriendCircle","ok");
+                    Collections.reverse(list);
+                    Message message = new Message();
+                    Bundle bundle = new Bundle();
+                    message.what =resultCode;
+                    bundle.putSerializable("list", (Serializable) list);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else {
+                    Log.e("queryFriendCircle",e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 查询动态
+     * @param resultCode
+     * @param handler
+     */
+    public void queryPersonalCircle(final int resultCode, final Handler handler){
+        UserInfo userInfo = BmobUser.getCurrentUser(UserInfo.class);
+        BmobQuery<HealthCircle> query = new BmobQuery<>();
+        query.addWhereEqualTo("auther",userInfo);
         query.include("auther");// 希望在查询帖子信息的同时也把发布人的信息查询出来
         query.findObjects(new FindListener<HealthCircle>() {
             @Override

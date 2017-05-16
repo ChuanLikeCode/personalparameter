@@ -69,6 +69,11 @@ public class SettingActivity extends BaseActivity implements ActionSheet.OnSheet
                     dialog.dismiss();
                     ToastUtils.shortToast(SettingActivity.this, "信息保存失败请重试");
                     break;
+                case 555:
+                    Intent intent1 = new Intent(SettingActivity.this, LoginActivity.class);
+                    startActivity(intent1);
+                    AppManager.getInstance().finishOtherActivity();
+                    break;
             }
 
         }
@@ -221,7 +226,7 @@ public class SettingActivity extends BaseActivity implements ActionSheet.OnSheet
      * 退出登录提示框
      */
     private void logoutDialog() {
-        MyAlertDialog logDialog = new MyAlertDialog(this);
+        final MyAlertDialog logDialog = new MyAlertDialog(this);
         logDialog.builder()
                 .setTitle("退出提示")
                 .setMsg("是否要退出登录？")
@@ -234,10 +239,12 @@ public class SettingActivity extends BaseActivity implements ActionSheet.OnSheet
                 .setPositiveButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MyApplication.getInstance().saveUserInfo(null);
-                        Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        AppManager.getInstance().finishActivity();
+                        loginuser = MyApplication.getInstance().readLoginUser();
+                        loginuser.setLogin(false);
+                        MyApplication.getInstance().saveUserInfo(loginuser);
+                        loginuser.setLogin(false);
+                        bombUtils.updateInfo(loginuser,555,handler);
+
                     }
                 })
                 .show();

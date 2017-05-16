@@ -14,7 +14,7 @@ import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseFragment;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.ui.activity.KnowLedgeActivity;
-import com.zcdyy.personalparameter.ui.activity.ReseivePasswordActivity;
+import com.zcdyy.personalparameter.ui.activity.MyHomePageActivity;
 import com.zcdyy.personalparameter.ui.activity.SettingActivity;
 import com.zcdyy.personalparameter.ui.activity.YiJianActivity;
 import com.zcdyy.personalparameter.utils.Utils;
@@ -105,8 +105,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     startActivityForResult(intent,123);
                     break;
                 case R.id.rl_reserve:
-                    intent = new Intent(getActivity(), ReseivePasswordActivity.class);
-                    intent.putExtra("title", "修改密码");
+                    intent = new Intent(getActivity(), MyHomePageActivity.class);
                     startActivityForResult(intent, 333);
                     break;
             }

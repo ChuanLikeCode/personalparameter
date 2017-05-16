@@ -66,7 +66,7 @@ public class PersonalDataFragment extends BaseFragment implements View.OnClickLi
                     stopRefresh();
                     break;
                 case 2:
-                    bmobUtils.getDataInfo(loginuser.getId(),3,handler);
+                    bmobUtils.getDataInfo(loginuser.getObjectId(),3,handler);
                     break;
                 case 3:
                     setListData(msg);
@@ -74,7 +74,7 @@ public class PersonalDataFragment extends BaseFragment implements View.OnClickLi
                     dialog.dismiss();
                     break;
                 case 4:
-                    bmobUtils.getDataInfo(loginuser.getId(),1,handler);
+                    bmobUtils.getDataInfo(loginuser.getObjectId(),1,handler);
                     ToastUtils.shortToast(getActivity(),"删除成功");
                     break;
                 case 404:
@@ -132,7 +132,7 @@ public class PersonalDataFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                bmobUtils.getDataInfo(loginuser.getId(),1,handler);
+                bmobUtils.getDataInfo(loginuser.getObjectId(),1,handler);
             }
         });
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -149,14 +149,14 @@ public class PersonalDataFragment extends BaseFragment implements View.OnClickLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case 123:
-                bmobUtils.getDataInfo(loginuser.getId(),1,handler);
+                bmobUtils.getDataInfo(loginuser.getObjectId(),1,handler);
                 break;
         }
     }
 
     private void initData() {
         bmobUtils = new BmobUtils(getActivity());
-        bmobUtils.getDataInfo(loginuser.getId(),1,handler);
+        bmobUtils.getDataInfo(loginuser.getObjectId(),1,handler);
         adapter = new ParaAdapter(getActivity(),list);
         adapter.setHandler(handler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -241,7 +241,7 @@ public class PersonalDataFragment extends BaseFragment implements View.OnClickLi
     private void addDataInfo(String str) {
         dialog = ProgressDialog.show(getActivity(),null,"正在保存数据.....");
         DataInfo dataInfo = new DataInfo();
-        dataInfo.setUserId(loginuser.getId());
+        dataInfo.setUserId(loginuser.getObjectId());
         dataInfo.setName(str);
         bmobUtils.saveDataInfo(dataInfo,2,handler);
     }

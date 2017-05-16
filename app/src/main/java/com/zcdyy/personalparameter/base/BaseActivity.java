@@ -29,6 +29,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import cn.bmob.v3.BmobUser;
+
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected FragmentManager fragmentManager;
@@ -88,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 //        steepStatusBar();
         initStart();
 //        ZsOkHttpUtils.myInstant().setContext(this);
-        loginuser = MyApplication.getInstance().readLoginUser();
+        loginuser = BmobUser.getCurrentUser(UserInfo.class);
         MyApplication.getInstance().getActivityManager().addActivity(this);
         // 设置所有Activity禁止横屏展示
         scrollViewLayout = getLayoutInflater().inflate(R.layout.scrollview_select, null);

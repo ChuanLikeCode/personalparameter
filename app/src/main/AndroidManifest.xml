@@ -63,16 +63,14 @@
         <activity
             android:name=".ui.activity.SettingActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".ui.activity.ReseivePasswordActivity"
-            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ui.activity.HealthCircleDetailActivity" />
         <activity android:name=".ui.activity.DataDetailActivity" />
         <activity android:name=".ui.activity.ShowImageActivity" />
         <activity android:name=".ui.activity.KnowLedgeActivity" />
         <activity android:name=".ui.activity.KnowDetailActivity" />
         <activity android:name=".ui.activity.YiJianActivity" />
-        <activity android:name=".ui.activity.YiJianDetailActivity"></activity>
+        <activity android:name=".ui.activity.YiJianDetailActivity" />
+        <activity android:name=".ui.activity.MyHomePageActivity"></activity>
     </application>
 
 </manifest>

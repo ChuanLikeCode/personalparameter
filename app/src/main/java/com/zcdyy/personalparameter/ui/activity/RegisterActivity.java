@@ -18,6 +18,7 @@ import com.zcdyy.personalparameter.R;
 import com.zcdyy.personalparameter.base.BaseActivity;
 import com.zcdyy.personalparameter.bean.UserInfo;
 import com.zcdyy.personalparameter.utils.BmobUtils;
+import com.zcdyy.personalparameter.utils.ToastUtils;
 
 import java.util.regex.Pattern;
 
@@ -76,6 +77,10 @@ public class RegisterActivity extends BaseActivity {
                     break;
                 case SMSDDK_HANDLER://短信发送完成处理信息回调
                     getSMS(msg);
+                    break;
+                case 222:
+                    dialog.dismiss();
+                    ToastUtils.shortToast(RegisterActivity.this,"不存在该账号");
                     break;
             }
         }

@@ -21,6 +21,8 @@ import com.zcdyy.personalparameter.constant.Constants;
 import com.zcdyy.personalparameter.utils.BmobUtils;
 import com.zcdyy.personalparameter.views.CleanableEditText;
 
+import cn.bmob.v3.BmobUser;
+
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     public UserInfo account = new UserInfo();
@@ -35,12 +37,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             dialog.dismiss();
             switch (msg.what){
                 case 1:
-                    startActivity(EditMyInfoActivity.class);
-                    finish();
+//                    startActivity(EditMyInfoActivity.class);
+                    UserInfo userInfo = MyApplication.getInstance().readLoginUser();
+                    userInfo.setLogin(true);
+                    MyApplication.getInstance().saveUserInfo(userInfo);
+                    bmobUtils.updateInfo(userInfo,3,handler);
                     break;
                 case 2:
                     Toast.makeText(LoginActivity.this, "用户名或者密码错误", Toast.LENGTH_LONG).show();
                     password.setText("");
+                    break;
+                case 3:
+                    startActivity(EditMyInfoActivity.class);
+                    finish();
                     break;
             }
         }
@@ -59,9 +68,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         loginuser = MyApplication.getInstance().readLoginUser();
         if (loginuser != null) {
-            startActivity(EditMyInfoActivity.class);
-            finish();
-            return;
+            Log.e("isLogin",loginuser.isLogin()+"");
+            if (loginuser.isLogin()){
+                startActivity(EditMyInfoActivity.class);
+                finish();
+                return;
+            }
         }
         setContentView(R.layout.activity_login);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -225,7 +225,7 @@
             android:layout_toRightOf="@id/iv_reserve"
             android:layout_marginLeft="16dp"
             android:textColor="@color/colorBlack"
-            android:text="修改密码"/>
+            android:text="我的动态"/>
 
         <ImageView
             android:layout_width="15dp"

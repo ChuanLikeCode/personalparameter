@@ -24,7 +24,7 @@ import com.zcdyy.personalparameter.views.WheelPicker;
 
 import java.util.List;
 
-
+import cn.bmob.v3.BmobUser;
 
 
 /**
@@ -38,7 +38,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginuser = MyApplication.getInstance().readLoginUser();
+        loginuser = BmobUser.getCurrentUser(UserInfo.class);
         scrollViewLayout = getActivity().getLayoutInflater().inflate(R.layout.scrollview_select, null);
     }
 

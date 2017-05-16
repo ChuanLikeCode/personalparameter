@@ -78,7 +78,7 @@ public class YiJianActivity extends BaseActivity {
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
                 if (type==0){
-                    bmobUtils.getYijian(loginuser.getId(),1,2,handler);
+                    bmobUtils.getYijian(loginuser.getObjectId(),1,2,handler);
                 }else {
                     bmobUtils.getZiXun(1,2,handler);
                 }
@@ -96,7 +96,7 @@ public class YiJianActivity extends BaseActivity {
             adapter = new YiJianAdapter(this,1);
             title.setText("资讯推送");
         }else {
-            bmobUtils.getYijian(loginuser.getId(),1,2,handler);
+            bmobUtils.getYijian(loginuser.getObjectId(),1,2,handler);
             adapter = new YiJianAdapter(this,0);
             right.setText("添加");
             title.setText("意见反馈");
@@ -137,7 +137,7 @@ public class YiJianActivity extends BaseActivity {
                         }else {
                             YiJian yiJian = new YiJian();
                             yiJian.setQuestion(result);
-                            yiJian.setUserId(loginuser.getId());
+                            yiJian.setUserId(loginuser.getObjectId());
                             bmobUtils.saveYiJian(yiJian,5,2,handler);
                         }
                     }
