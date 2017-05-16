@@ -5,10 +5,10 @@ import java.io.Serializable;
 import cn.bmob.v3.BmobObject;
 
 /**
- * Created by chuan on 2017/5/14.
+ * Created by chuan on 2017/5/16.
  */
 
-public class KnowLedge extends BmobObject implements Serializable{
+public class KnowLedge extends BmobObject implements Serializable {
     private String title;
     private String shihe;
     private String shenggao;
